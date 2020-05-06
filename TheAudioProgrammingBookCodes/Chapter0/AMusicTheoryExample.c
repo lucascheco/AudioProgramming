@@ -61,37 +61,37 @@ int main()
     {
     case 'C':
     case 'c':
-        pc1 = 0;
+        pc2 = 0;
         break;
 
     case 'D':
     case 'd':
-        pc1 = 2;
+        pc2 = 2;
         break;
 
     case 'E':
     case 'e':
-        pc1 = 4;
+        pc2 = 4;
         break;
 
     case 'F':
     case 'f':
-        pc1 = 5;
+        pc2 = 5;
         break;
 
     case 'G':
     case 'g':
-        pc1 = 7;
+        pc2 = 7;
         break;
 
     case 'A':
     case 'a':
-        pc1 = 9;
+        pc2 = 9;
         break;
 
     case 'B':
     case 'b':
-        pc1 = 11;
+        pc2 = 11;
         break;
 
     default:
@@ -166,3 +166,12 @@ int main()
 
     return 0;
 }
+
+/*
+    OUTPUT SAMPLE:
+    Please enter two natural notes.
+    firstnote: E
+    seconde note: c
+    8 semitones up or 4 semitones down
+    minor 6th up or major 3rd down
+*/
