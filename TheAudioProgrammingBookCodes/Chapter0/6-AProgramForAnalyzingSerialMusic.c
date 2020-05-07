@@ -48,3 +48,22 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
+/*
+    OUTPUT SAMPLE:
+    OBS: I didn't understand this code yet!
+        Running the code with twelve ramdom arguments -> 6-AProgramForAnalyzingSerialMusic A B C Db A B C Db A B C Db
+    Output:
+        C C C C C C C C C C C 
+        C C C C C C C C C C C
+        C C C C C C C C C C C
+        C C C C C C C C C C C
+        C C C C C C C C C C C
+        C C C C C C C C C C C
+        C C C C C C C C C C C
+        C C C C C C C C C C C
+        C C C C C C C C C C C
+        C C C C C C C C C C C
+        C C C C C C C C C C C
+        C C C C C C C C C C C
+*/
