@@ -17,6 +17,6 @@ int main()
 }
 
 /*
-    OUTPUT:
+    OUTPUT SAMPLE:
         16383
 */
