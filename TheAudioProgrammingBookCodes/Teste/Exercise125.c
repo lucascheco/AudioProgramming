@@ -9,13 +9,15 @@
 int main()
 {
     double length; /* . . . which we want to find, */
-
+    //(a)ANSWER:
     //OBS: I'm not sure about the answer.
     for (int i = 0; i <= 12; i++)
     {
         length = 660.0 * (12.0 * (1.0 / (12.0 + (double)i)));
         printf("%lf\n", length);
     }
+
+    //(b)ANSWER: Loops.
 
     return 0;
 }
