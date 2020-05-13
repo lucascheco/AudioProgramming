@@ -1,6 +1,6 @@
 //Author: Lucas Pacheco.
 //Description: A test exercise from "The Audio Programming Book", another cast exercise.
-//Date: 09/06/2020.
+//Date: 09/05/2020.
 
 #include <stdio.h>
 

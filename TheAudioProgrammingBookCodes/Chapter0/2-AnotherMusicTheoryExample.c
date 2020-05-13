@@ -1,6 +1,6 @@
 //Author: Lucas Pacheco.
 //Description: A copy from "The Audio Programming Book", chapter 0, Another Music Theory Example.
-//Date: 05/06/2020.
+//Date: 05/05/2020.
 
 #include <stdio.h>
 

@@ -1,6 +1,6 @@
 //Author: Lucas Pacheco.
 //Description: A test exercise from "The Audio Programming Book", chapter 1, implement the program fre2midi.
-//Date: 11/06/2020.
+//Date: 11/05/2020.
 
 /*
     OBS: I got very confused about this exercise, so i got help and found this code https://gist.github.com/analoq/771397. 

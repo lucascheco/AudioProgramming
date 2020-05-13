@@ -1,6 +1,6 @@
 //Author: Lucas Pacheco.
 //Description: A test exercise from "The Audio Programming Book", modifying Listing 1.2.
-//Date: 09/06/2020.
+//Date: 09/05/2020.
 
 /* listing 1.2. Calculate frequency of a MIDI Note number */
 #include <stdio.h>

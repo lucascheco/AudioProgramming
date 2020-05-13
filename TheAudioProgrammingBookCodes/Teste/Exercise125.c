@@ -1,6 +1,6 @@
 //Author: Lucas Pacheco.
 //Description: A tes exercise from "The Audio Programming Book", chapter 1, modifying Listing 1.2 to print sounding length.
-//Date: 11/06/2020.
+//Date: 11/05/2020.
 
 /* listing 1.2. Calculate frequency of a MIDI Note number */
 #include <stdio.h>
