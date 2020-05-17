@@ -1,6 +1,6 @@
 //Author: Lucas Pacheco.
 //Description: A test exercise from "The Audio Programming Book", chapter 1, covert all programs developed so far to use argc and argv.
-//Date: 14/05/2020.
+//Date: 17/05/2020.
 
 #include <stdio.h>
 #include <math.h>
