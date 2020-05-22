@@ -1,5 +1,5 @@
 //Author: Lucas Pacheco.
-//Description: A test exercise from "The Audio Programming Book", chapter 1, writing a program to create musical scales.
+//Description: Code  from "The Audio Programming Book", chapter 1, writing a program to create musical scales.
 //Date: 22/05/2020.
 
 #include <stdio.h>
