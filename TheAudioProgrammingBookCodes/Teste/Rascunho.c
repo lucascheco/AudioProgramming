@@ -1,16 +1,24 @@
 //Author: Lucas Pacheco.
 //Description: A program for testing, this code always will be changed.
-//Date: 14/05/2020.
+//Date: 26/05/2020.
 
 #include <stdio.h>
 #include <stdlib.h>
 
 int main()
 {
-    char x[] = "sdasd";
-    int y;
-    y = atoi(x);
+    double buffer[1024];
+    double *ptr = buffer;
 
-    printf("%d\n", y);
+    for (int i = 0; i < 1024; i++)
+    {
+        *ptr++ = 0.0;
+    }
+
+    for (int i = 0; i < 1024; i++)
+    {
+        printf("%lf\n", buffer[i]);
+    }
+
     return 0;
 }
