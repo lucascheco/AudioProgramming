@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     FILE *fp;
     double intervals[25];
 
-    /* check first arg for flag option: argc at least */
+    /* check first arg for flag option: argc at least 2 */
     while (argc > 1)
     {
         if (argv[1][0] == '-')
@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
             break;
     }
 
+    /* required arguments */
     if (argc < 3)
     {
         printf("insufficient arguments\n");
@@ -133,6 +134,42 @@ int main(int argc, char *argv[])
     }
     else
         basefreq = startval;
+
+    /* calc ratio from notes and fill the array */
+    ratio = pow(2.0, 1.0 / notes);
+
+    for (i = 0; i <= notes; i++)
+    {
+        intervals[i] = basefreq;
+        basefreq *= ratio;
+    }
+
+    /* finally, read array, write to screen, and optionally to file */
+
+    for (i = 0; i <= notes; i++)
+    {
+        if (write_interval)
+            printf("%d: \t%f\t%f\n", i, pow(ratio, i), intervals[i]);
+        else
+            printf("%d: \t%f\n", i, intervals[i]);
+
+        if (fp)
+        {
+            if (write_interval)
+                err = fprintf(fp, "%d: \t%f\t%f\n", i, pow(ratio, i), intervals[i]);
+            else
+                err = fprintf(fp, "%d: \t%f\n", i, intervals[i]);
+
+            if (err < 0)
+                break;
+        }
+    }
+
+    if (err < 0)
+        perror("There was an error writing the file.\n");
+
+    if (fp)
+        fclose(fp);
 
     return 0;
 }
