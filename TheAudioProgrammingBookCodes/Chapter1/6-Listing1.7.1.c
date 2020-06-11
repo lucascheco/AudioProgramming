@@ -33,7 +33,7 @@ BREAKPOINT maxpoint(const BREAKPOINT *points, long npoints)
 
     for (i = 0; i < npoints; i++)
     {
-        if (points[0].value > point.value)
+        if (points[i].value > point.value)
         {
             point.value = points[i].value;
             point.time = points[i].time;
