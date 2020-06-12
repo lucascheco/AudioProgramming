@@ -9,9 +9,9 @@ int main()
 {
     int i;
 
-    for (i = 0; i < 10; i++)
+    for (i = 0; i < 10;)
     {
-        if (++i % 2 == 0)
+        if (i++ % 2 == 0)
             printf("%d\n", i);
     }
 
