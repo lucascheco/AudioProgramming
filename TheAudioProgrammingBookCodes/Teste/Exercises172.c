@@ -1,5 +1,5 @@
 //Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, Listing1.7.4,  .
+//Description: Test exercise from "The Audio Programming Book", chapter 1, Exercises 1.7.2 .
 //Date: 11/06/2020.
 
 #include <stdio.h>
@@ -14,13 +14,13 @@ typedef struct breakpoint
     VALUE value;
 } BREAKPOINT;
 
-BREAKPOINT maxpoint(const BREAKPOINT *points, long npoints);
+BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints);
 
-BREAKPOINT *get_breakpoints(FILE *fp, long *psize);
+BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize);
 
 int main(int argc, char *argv[])
 {
-    long size;
+    unsigned long size;
     TIME dur;
     BREAKPOINT point, *points;
     FILE *fp;
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    printf("read %d breakpoints\n", size);
+    printf("read %lu breakpoints\n", size);
 
     dur = points[size - 1].time;
 
@@ -86,10 +86,10 @@ int main(int argc, char *argv[])
 }
 
 /* FUNCTIONS*/
-BREAKPOINT *get_breakpoints(FILE *fp, long *psize)
+BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize)
 {
     int got;
-    long npoints = 0, size = 64;
+    unsigned long npoints = 0, size = 64;
     TIME lasttime = 0.0;
     BREAKPOINT *points = NULL;
     char line[80];
@@ -111,13 +111,13 @@ BREAKPOINT *get_breakpoints(FILE *fp, long *psize)
 
         if (got == 0)
         {
-            printf("Line %d has non-numeric data\n", npoints + 1);
+            printf("Line %lu has non-numeric data\n", npoints + 1);
             break;
         }
 
         if (points[npoints].time < lasttime)
         {
-            printf("data error at point %d: time not increasing\n", npoints + 1);
+            printf("data error at point %lu: time not increasing\n", npoints + 1);
             break;
         }
 
@@ -148,7 +148,7 @@ BREAKPOINT *get_breakpoints(FILE *fp, long *psize)
     return points;
 }
 
-BREAKPOINT maxpoint(const BREAKPOINT *points, long npoints)
+BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints)
 {
     int i;
     BREAKPOINT point;
@@ -167,20 +167,3 @@ BREAKPOINT maxpoint(const BREAKPOINT *points, long npoints)
 
     return point;
 }
-
-/*
-    OUTPUTSAMPLE:
-        textfile_content breakb.txt:
-            0.0 1.23
-            1.2 3.68
-            4.6 2.11
-            9.2 2.021
-
-        input: 6-Listing1.7.4.c breakb.txt
-        output:
-            breakdur: find duration of breakpoint file
-            read 4 breakpoints
-            duration: 9.200000 seconds
-            maximum value: 3.680000 at 1.200000 secs
-
-*/

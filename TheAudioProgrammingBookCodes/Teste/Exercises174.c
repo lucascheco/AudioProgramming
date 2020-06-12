@@ -1,5 +1,5 @@
 //Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, Listing1.7.4,  .
+//Description: Test exercise from "The Audio Programming Book", chapter 1, Exercises 1.7.4 .
 //Date: 11/06/2020.
 
 #include <stdio.h>
@@ -14,13 +14,15 @@ typedef struct breakpoint
     VALUE value;
 } BREAKPOINT;
 
-BREAKPOINT maxpoint(const BREAKPOINT *points, long npoints);
+BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints);
 
-BREAKPOINT *get_breakpoints(FILE *fp, long *psize);
+BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize);
+
+BREAKPOINT *stretch_times(FILE *fp, unsigned long size);
 
 int main(int argc, char *argv[])
 {
-    long size;
+    unsigned long size;
     TIME dur;
     BREAKPOINT point, *points;
     FILE *fp;
@@ -69,7 +71,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    printf("read %d breakpoints\n", size);
+    printf("read %lu breakpoints\n", size);
 
     dur = points[size - 1].time;
 
@@ -86,10 +88,10 @@ int main(int argc, char *argv[])
 }
 
 /* FUNCTIONS*/
-BREAKPOINT *get_breakpoints(FILE *fp, long *psize)
+BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize)
 {
     int got;
-    long npoints = 0, size = 64;
+    unsigned long npoints = 0, size = 64;
     TIME lasttime = 0.0;
     BREAKPOINT *points = NULL;
     char line[80];
@@ -111,13 +113,13 @@ BREAKPOINT *get_breakpoints(FILE *fp, long *psize)
 
         if (got == 0)
         {
-            printf("Line %d has non-numeric data\n", npoints + 1);
+            printf("Line %lu has non-numeric data\n", npoints + 1);
             break;
         }
 
         if (points[npoints].time < lasttime)
         {
-            printf("data error at point %d: time not increasing\n", npoints + 1);
+            printf("data error at point %lu: time not increasing\n", npoints + 1);
             break;
         }
 
@@ -148,7 +150,7 @@ BREAKPOINT *get_breakpoints(FILE *fp, long *psize)
     return points;
 }
 
-BREAKPOINT maxpoint(const BREAKPOINT *points, long npoints)
+BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints)
 {
     int i;
     BREAKPOINT point;
