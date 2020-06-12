@@ -36,7 +36,10 @@ int main(int argc, char *argv[])
     fp = fopen(argv[1], "r");
 
     if (fp == NULL)
+    {
+        printf("No FILE opened.\n");
         return 0;
+    }
 
     size = 0;
 
