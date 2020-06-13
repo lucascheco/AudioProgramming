@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "FileMenu.c"
 
 #define TIME double
 #define VALUE double
@@ -18,7 +19,24 @@ BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints);
 
 BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize);
 
+/* NEW functions */
 BREAKPOINT *stretch_times(FILE *fp, unsigned long size);
+
+BREAKPOINT *normalize(FILE *fp, unsigned long *size);
+
+BREAKPOINT *shift_Up(FILE *fp, unsigned long size);
+
+BREAKPOINT *shift_Down(FILE *fp, unsigned long size);
+
+BREAKPOINT *scale_by_factor(FILE *fp, unsigned long size, double factor);
+
+BREAKPOINT *truncate(FILE *fp, unsigned long size);
+
+BREAKPOINT *extend(FILE *fp, unsigned long size);
+
+BREAKPOINT *insert_point(FILE *fp, unsigned long size, BREAKPOINT p);
+
+BREAKPOINT *delete_point(FILE *fp, unsigned long size, BREAKPOINT *p);
 
 int main(int argc, char *argv[])
 {
@@ -26,6 +44,8 @@ int main(int argc, char *argv[])
     TIME dur;
     BREAKPOINT point, *points;
     FILE *fp;
+    flagOption *flag;
+    flag = (flagOption *)malloc(sizeof(flagOption *));
 
     printf("breakdur: find duration of breakpoint file\n");
 
@@ -34,8 +54,9 @@ int main(int argc, char *argv[])
         printf("usage: breakdur infile.txt\n");
         return 0;
     }
+    fp = menu_mode(fp, argv[1], flag);
 
-    fp = fopen(argv[1], "r");
+    // fp = fopen(argv[1], "r+");
 
     if (fp == NULL)
     {
@@ -46,6 +67,7 @@ int main(int argc, char *argv[])
     size = 0;
 
     points = get_breakpoints(fp, &size);
+    // points = normalize(fp, &size);
 
     if (points == NULL)
     {
@@ -170,6 +192,26 @@ BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints)
     return point;
 }
 
+/* New functions */
+BREAKPOINT *normalize(FILE *fp, unsigned long *size)
+{
+    BREAKPOINT *points, maximumpoint;
+    VALUE normalFactor;
+
+    points = get_breakpoints(fp, size);
+
+    maximumpoint = maxpoint(points, *size);
+
+    normalFactor = maximumpoint.value - 1.0;
+
+    for (int i = 0; i < *size; i++)
+    {
+        points[i].value -= normalFactor;
+        fprintf(fp, "%lf %lf", points[i].time, points[i].value);
+    }
+
+    return points;
+}
 /*
     OUTPUTSAMPLE:
         textfile_content breakb.txt:
