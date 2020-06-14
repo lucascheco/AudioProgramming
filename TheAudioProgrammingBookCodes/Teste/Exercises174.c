@@ -67,6 +67,7 @@ int main(int argc, char *argv[])
     size = 0;
 
     points = get_breakpoints(fp, &size);
+    printf("O tamanho e: %lu\n", size);
     // points = normalize(fp, &size);
 
     if (points == NULL)
