@@ -29,7 +29,7 @@ BREAKPOINT *shift_Up(FILE *fp, unsigned long *size, VALUE shiftFactor);
 
 BREAKPOINT *shift_Down(FILE *fp, unsigned long *size, VALUE shiftFactor);
 
-BREAKPOINT *scale_by_factor(FILE *fp, unsigned long *size, int scaleFactor);
+BREAKPOINT *scale_by_factor(FILE *fp, unsigned long *size, unsigned long scaleFactor);
 
 BREAKPOINT *truncate(FILE *fp, unsigned long *size);
 
@@ -104,7 +104,8 @@ int main(int argc, char *argv[])
     printf("maximum value: %f at %f secs\n", point.value, point.time);
 
     // points = normalize(fp, &size, 1.0);
-    points = stretch_times(fp, &size, 3.0);
+    // points = stretch_times(fp, &size, 3.0);
+    points = scale_by_factor(fp, &size, 2);
 
     free(points);
     fclose(fp);
@@ -269,28 +270,43 @@ BREAKPOINT *shift_Down(FILE *fp, unsigned long *size, VALUE shiftFactor)
 
 BREAKPOINT *scale_by_factor(FILE *fp, unsigned long *size, unsigned long scaleFactor)
 {
-    BREAKPOINT *points;
+    BREAKPOINT *points, *aux;
     BREAKPOINT *temp;
     TIME auxTime;
     VALUE auxValue;
-    int countGuard = 1;
+    int j = 0;
+    int k = 0;
+    int countGuard = 0;
 
     points = get_breakpoints(fp, size);
-
-    temp = (BREAKPOINT *)realloc(points, sizeof((BREAKPOINT *)((*size) * scaleFactor) + 1));
+    aux = points;
+    temp = (BREAKPOINT *)realloc(points, (sizeof(BREAKPOINT) * (*size * scaleFactor)) + 1);
+    points = temp;
 
     fputs("\n////////////////////////////////\n", fp);
-    fprintf(fp, "Scale by a factor of %.1lfx:\n", scaleFactor);
+    fprintf(fp, "Scale by a factor of %lux:\n", scaleFactor);
 
-    for (int i = 0; i + 1 < (((*size) * (scaleFactor)) + 1); i++)
+    for (int i = 0; i < *size; i++)
     {
-        temp[i].time = (points[i + 1].time - points[i].time) / (scaleFactor + 1);
-        temp[i].value = temp[i].value;
+        auxTime = (aux[i + 1].time - aux[i].time) / (double)(scaleFactor + 1);
+        auxValue = (aux[i + 1].value - aux[i].value) / (double)(scaleFactor + 1);
 
-        fprintf(fp, "%lf %lf\n", points[i].time, points[i].value);
+        if (auxValue < 0)
+            auxValue = (aux[i].value - aux[i + 1].value) / (double)(scaleFactor + 1);
 
-        countGuard++;
+        for (j = countGuard, k = 0; k < scaleFactor + 1; j++, k++)
+        {
+            points[i + j].time = aux[i].time + auxTime * (double)k;
+            points[i + j].value = aux[i].value + auxValue * (double)k;
+            fprintf(fp, "%lf %lf\n", points[i + j].time, points[i + j].value);
+            countGuard++;
+        }
     }
+
+    free(temp);
+    free(aux);
+
+    return points;
 }
 
 /*
