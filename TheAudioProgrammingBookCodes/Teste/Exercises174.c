@@ -280,7 +280,7 @@ BREAKPOINT *scale_by_factor(FILE *fp, unsigned long *size, unsigned long scaleFa
 
     points = get_breakpoints(fp, size);
     aux = points;
-    temp = (BREAKPOINT *)realloc(points, (sizeof(BREAKPOINT) * (*size * scaleFactor)) + 1);
+    temp = (BREAKPOINT *)malloc((sizeof(BREAKPOINT) * (*size * scaleFactor) + 1));
     points = temp;
 
     fputs("\n////////////////////////////////\n", fp);
