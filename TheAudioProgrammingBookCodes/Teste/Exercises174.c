@@ -7,7 +7,7 @@
 #include <math.h>
 #include "FileMenu.c"
 
-#define TIME double
+#define TIME  double
 #define VALUE double
 
 typedef struct breakpoint
@@ -35,19 +35,21 @@ BREAKPOINT *truncate(FILE *fp, unsigned long *size);
 
 BREAKPOINT *extend(FILE *fp, unsigned long *size);
 
-BREAKPOINT *insert_point(FILE *fp, unsigned long *size, BREAKPOINT p);
+int *insert_point(FILE *fp, BREAKPOINT p);
 
-BREAKPOINT *delete_point(FILE *fp, unsigned long *size, BREAKPOINT *p);
+int *delete_point(FILE *fp, BREAKPOINT *p);
 
 int main(int argc, char *argv[])
 {
     unsigned long size;
     TIME dur;
-    BREAKPOINT point, *points;
+    BREAKPOINT point, *points, to_add;
     FILE *fp;
     flagOption *flag;
     flag = (flagOption *)malloc(sizeof(flagOption *));
 
+    to_add.time = 4.23;
+    to_add.value = 32.534;
     printf("breakdur: find duration of breakpoint file\n");
 
     if (argc < 2)
@@ -55,6 +57,7 @@ int main(int argc, char *argv[])
         printf("usage: breakdur infile.txt\n");
         return 0;
     }
+
     fp = menu_mode(fp, argv[1], flag);
 
     // fp = fopen(argv[1], "r+");
@@ -105,7 +108,8 @@ int main(int argc, char *argv[])
 
     // points = normalize(fp, &size, 1.0);
     // points = stretch_times(fp, &size, 3.0);
-    points = scale_by_factor(fp, &size, 2);
+    // points = scale_by_factor(fp, &size, 2);
+    insert_point(fp, to_add);
 
     free(points);
     fclose(fp);
@@ -272,23 +276,24 @@ BREAKPOINT *scale_by_factor(FILE *fp, unsigned long *size, unsigned long scaleFa
 {
     BREAKPOINT *points, *aux;
     BREAKPOINT *temp;
-    TIME auxTime;
+    TIME  auxTime;
     VALUE auxValue;
     int j = 0;
     int k = 0;
     int countGuard = 0;
 
+    aux = (BREAKPOINT *)malloc(*size * sizeof(BREAKPOINT *));
     points = get_breakpoints(fp, size);
     aux = points;
-    temp = (BREAKPOINT *)malloc((sizeof(BREAKPOINT) * (*size * scaleFactor) + 1));
+    temp = (BREAKPOINT *)realloc(points, ((*size) * scaleFactor) * sizeof(BREAKPOINT) + 1);
     points = temp;
 
     fputs("\n////////////////////////////////\n", fp);
     fprintf(fp, "Scale by a factor of %lux:\n", scaleFactor);
 
-    for (int i = 0; i < *size; i++)
+    for (int i = 0; i + 1 < *size; i++)
     {
-        auxTime = (aux[i + 1].time - aux[i].time) / (double)(scaleFactor + 1);
+        auxTime  = (aux[i + 1].time  - aux[i].time)  / (double)(scaleFactor + 1);
         auxValue = (aux[i + 1].value - aux[i].value) / (double)(scaleFactor + 1);
 
         if (auxValue < 0)
@@ -296,8 +301,9 @@ BREAKPOINT *scale_by_factor(FILE *fp, unsigned long *size, unsigned long scaleFa
 
         for (j = countGuard, k = 0; k < scaleFactor + 1; j++, k++)
         {
-            points[i + j].time = aux[i].time + auxTime * (double)k;
+            points[i + j].time  = aux[i].time  + auxTime  * (double)k;
             points[i + j].value = aux[i].value + auxValue * (double)k;
+
             fprintf(fp, "%lf %lf\n", points[i + j].time, points[i + j].value);
             countGuard++;
         }
@@ -309,6 +315,25 @@ BREAKPOINT *scale_by_factor(FILE *fp, unsigned long *size, unsigned long scaleFa
     return points;
 }
 
+int *insert_point(FILE *fp, BREAKPOINT p)
+{
+    fprintf(fp,"%lf %lf\n", p.time, p.value);
+
+    return 0;
+}
+
+int *delete_point(FILE *fp, BREAKPOINT p)
+{
+    unsigned long size;
+    BREAKPOINT *points, *check;
+    points = get_breakpoints(fp, &size);
+
+    check = points; 
+    while(1)
+    {
+        check++;
+    }
+}
 /*
     OUTPUTSAMPLE:
         textfile_content breakb.txt:

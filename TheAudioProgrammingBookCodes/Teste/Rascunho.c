@@ -32,7 +32,7 @@ int main()
         printf("WriteMode: \n");
         printf("Type a new text: ");
         scanf("%lf", &n2);
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 190; i++)
         {
             fprintf(fp, "%f %lf\n", (double)i, n2 * ((double)i / 2));
         }
