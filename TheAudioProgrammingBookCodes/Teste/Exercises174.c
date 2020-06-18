@@ -37,7 +37,7 @@ BREAKPOINT *extend(FILE *fp, unsigned long *size);
 
 int *insert_point(FILE *fp, BREAKPOINT p);
 
-int *delete_point(FILE *fp, BREAKPOINT *p);
+int *delete_point(FILE *fp, unsigned long *size, BREAKPOINT p);
 
 int main(int argc, char *argv[])
 {
@@ -48,8 +48,8 @@ int main(int argc, char *argv[])
     flagOption *flag;
     flag = (flagOption *)malloc(sizeof(flagOption *));
 
-    to_add.time = 4.23;
-    to_add.value = 32.534;
+    to_add.time = 3.000000; 
+    to_add.value = 5.017500;
     printf("breakdur: find duration of breakpoint file\n");
 
     if (argc < 2)
@@ -109,7 +109,9 @@ int main(int argc, char *argv[])
     // points = normalize(fp, &size, 1.0);
     // points = stretch_times(fp, &size, 3.0);
     // points = scale_by_factor(fp, &size, 2);
-    insert_point(fp, to_add);
+    // insert_point(fp, to_add);
+
+    delete_point(fp, &size, to_add);
 
     free(points);
     fclose(fp);
@@ -322,17 +324,25 @@ int *insert_point(FILE *fp, BREAKPOINT p)
     return 0;
 }
 
-int *delete_point(FILE *fp, BREAKPOINT p)
+int *delete_point(FILE *fp,unsigned long *size, BREAKPOINT p)
 {
-    unsigned long size;
-    BREAKPOINT *points, *check;
-    points = get_breakpoints(fp, &size);
+    BREAKPOINT *points;
+    
+    points = get_breakpoints(fp, size);
 
-    check = points; 
-    while(1)
-    {
-        check++;
+    fputs("\n////////////////////////////////\n", fp);
+    fputs("Deleted point\n", fp);
+    for (int i = 0; i < *size; i++)
+    {   
+        if (points[i].time == p.time && points[i].value == p.value)
+        {
+            continue;
+        }
+
+        fprintf(fp, "%lf %lf\n", points[i].time, points[i].value);
     }
+
+    return 0;
 }
 /*
     OUTPUTSAMPLE:
