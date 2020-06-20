@@ -11,8 +11,6 @@ int main()
     FILE *fp;
     flagOption *flag;
     char myfile[] = "myfile.txt";
-    char *text;
-    text = (char *)malloc(99 * sizeof(char *));
 
     flag = (flagOption *)malloc(sizeof(flagOption *));
     fp = menu_mode(fp, myfile, flag);
@@ -28,9 +26,12 @@ int main()
     }
     else if (*flag == 2)
     {
+        char *text;
+        text = (char *)malloc(99 * sizeof(char *));
         printf("Type a new text: ");
         gets(text);
         fprintf(fp, "%s\n", text);
+        free(text);
                 
     }
     else if (*flag == 3)
@@ -52,14 +53,21 @@ int main()
                 break;
 
             case 2:
+            {
+                char *text;
+                text = (char *)malloc(99 * sizeof(char *));
                 printf("WriteMode: \n");
                 printf("Type a new text: ");
                 gets(text);
+                printf("Funcionou:\n");
                 fprintf(fp, "\n%s", text);
+                free(text);
+            }
                 break;
 
             default:
                 printf("Invalid mode.\n");
+                break;
         }
     }
     else if (*flag == 4)
@@ -81,22 +89,31 @@ int main()
                 break;
 
             case 2:
+            {
+                char *text;
+                text = (char *)malloc(99 * sizeof(char *));
                 printf("WriteMode: \n");
                 printf("Type a new text: ");
                 gets(text);
                 fprintf(fp, "\n%s", text);
+                free(text);
+            }
                 break;
 
             default:
                 printf("Invalid mode.\n");
+                break;
         }
     }
     else if (*flag == 5)
     {
+        char *text;
+        text = (char *)malloc(99 * sizeof(char *));
         printf("AppendMode: \n");
         printf("Type a new text: ");
         gets(text);
         fprintf(fp, "\n%s", text);
+        free(text);
     }
     else if (*flag == 6)
     {
@@ -107,11 +124,15 @@ int main()
         switch(op)
         {
             case 1:
+            {
+                char *text;
+                text = (char *)malloc(99 * sizeof(char *));
                 printf("AppendMode: \n");
                 printf("Type a new text: ");
                 gets(text);
                 fprintf(fp, "\n%s", text);
-                
+                free(text);
+            }
                 break;
 
             case 2:
@@ -126,6 +147,7 @@ int main()
 
             default:
                 printf("Invalid mode.\n");
+                break;
         }
     }
     else
@@ -133,7 +155,7 @@ int main()
         printf("Invalid option\n");
     }
 
-    free(text);
+
     fclose(fp);
     return 0;
 }
