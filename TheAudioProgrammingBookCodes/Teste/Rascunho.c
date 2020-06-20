@@ -10,9 +10,9 @@ int main()
 {
     FILE *fp;
     flagOption *flag;
-    char myfile[] = "breakb.txt";
+    char myfile[] = "myfile.txt";
     char *text;
-    text = (char *)malloc(sizeof(char *));
+    text = (char *)malloc(99 * sizeof(char *));
 
     flag = (flagOption *)malloc(sizeof(flagOption *));
     fp = menu_mode(fp, myfile, flag);
@@ -28,28 +28,68 @@ int main()
     }
     else if (*flag == 2)
     {
-        double n1, n2;
-        printf("WriteMode: \n");
         printf("Type a new text: ");
-        scanf("%lf", &n2);
-        for (int i = 0; i < 190; i++)
-        {
-            fprintf(fp, "%f %lf\n", (double)i, n2 * ((double)i / 2));
-        }
+        gets(text);
+        fprintf(fp, "%s\n", text);
+                
     }
     else if (*flag == 3)
     {
+        int op;
         printf("Read_and_WriteMode: \n");
-        printf("Type a new text: ");
-        gets(text);
-        fprintf(fp, "\n%s", text);
+        printf("1-Read 2- Write:\n");
+        scanf("%d", &op);
+        switch(op)
+        {
+            case 1:
+                printf("ReadMode: \n");
+
+                char c;
+
+                while ((c = fgetc(fp)) != EOF)
+                    printf("%c", c);
+                
+                break;
+
+            case 2:
+                printf("WriteMode: \n");
+                printf("Type a new text: ");
+                gets(text);
+                fprintf(fp, "\n%s", text);
+                break;
+
+            default:
+                printf("Invalid mode.\n");
+        }
     }
     else if (*flag == 4)
     {
         printf("Read_and_WriteMode: \n");
-        printf("Type a new text: ");
-        gets(text);
-        fprintf(fp, "\n%s", text);
+        int op;
+        printf("1-Read 2- Write:\n");
+        scanf("%d", &op);
+        switch(op)
+        {
+            case 1:
+                printf("ReadMode: \n");
+
+                char c;
+
+                while ((c = fgetc(fp)) != EOF)
+                    printf("%c", c);
+                
+                break;
+
+            case 2:
+                printf("WriteMode: \n");
+                printf("Type a new text: ");
+                gets(text);
+                fprintf(fp, "\n%s", text);
+                break;
+
+            default:
+                printf("Invalid mode.\n");
+        }
     }
     else if (*flag == 5)
     {
@@ -61,9 +101,32 @@ int main()
     else if (*flag == 6)
     {
         printf("Append_and_ReadMode: \n");
-        printf("Type a new text: ");
-        gets(text);
-        fprintf(fp, "\n%s", text);
+        int op;
+        scanf("%d", &op);
+        printf("1-Append 2-Read:\n");
+        switch(op)
+        {
+            case 1:
+                printf("AppendMode: \n");
+                printf("Type a new text: ");
+                gets(text);
+                fprintf(fp, "\n%s", text);
+                
+                break;
+
+            case 2:
+                printf("ReadMode: \n");
+
+                char c;
+
+                while ((c = fgetc(fp)) != EOF)
+                    printf("%c", c);
+                
+                break;
+
+            default:
+                printf("Invalid mode.\n");
+        }
     }
     else
     {
