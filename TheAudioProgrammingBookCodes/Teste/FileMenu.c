@@ -46,7 +46,7 @@ FILE *menu_mode(FILE *fp, const char *filename, flagOption *flag)
     }
     else
     {
-        printf("Invalid option\n");
+        printf("Invalid option on FILE MENU.\n");
         *flag = 0;
         return NULL;
     }
