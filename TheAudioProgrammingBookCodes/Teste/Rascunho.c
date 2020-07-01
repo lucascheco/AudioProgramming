@@ -37,6 +37,7 @@ int main()
     else if (*flag == 3)
     {
         int op;
+
         printf("Read_and_WriteMode: \n");
         printf("1-Read 2- Write:\n");
         scanf("%d", &op);
@@ -52,19 +53,15 @@ int main()
                 
                 break;
 
-            case 2:
+            case 2: 
             {
-                char *text;
-                text = (char *)malloc(99 * sizeof(char *));
-                printf("WriteMode: \n");
-                printf("Type a new text: ");
-                gets(text);
-                printf("Funcionou:\n");
-                fprintf(fp, "\n%s", text);
-                free(text);
+                char text[100];
+                printf("Type a new text of a 99 char max: ");
+                scanf("%s", text);
+                fprintf(fp, "%s\n", text);
             }
                 break;
-
+            
             default:
                 printf("Invalid mode.\n");
                 break;
@@ -155,6 +152,7 @@ int main()
         printf("Invalid option\n");
     }
 
+    free(flag);
 
     fclose(fp);
     return 0;

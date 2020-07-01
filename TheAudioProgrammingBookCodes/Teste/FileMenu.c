@@ -50,7 +50,8 @@ FILE *menu_mode(FILE *fp, const char *filename, flagOption *flag)
         *flag = 0;
         return NULL;
     }
-
+    
+    free(op);
     return fp;
 }
 
