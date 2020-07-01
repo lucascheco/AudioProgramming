@@ -16,12 +16,13 @@ typedef struct breakpoint
     VALUE value;
 } BREAKPOINT;
 
-BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints);
 
 BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize);
 
+BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints);
+
 /* NEW functions */
-BREAKPOINT *stretch_times(FILE *fp, unsigned long *size, TIME timeFactor);
+BREAKPOINT *stretch_times(FILE *fp, unsigned long size, TIME timeFactor);
 
 BREAKPOINT *normalize(FILE *fp, unsigned long *size, VALUE normalFactor);
 
@@ -43,13 +44,16 @@ int main(int argc, char *argv[])
 {
     unsigned long size;
     TIME dur;
-    BREAKPOINT point, *points, to_add;
+    BREAKPOINT point_to_Store, *points, to_add;
     FILE *fp;
+    char *file_name;
+    file_name = argv[1];
     flagOption *flag;
     flag = (flagOption *)malloc(sizeof(flagOption *));
 
     to_add.time = 3.000000; 
     to_add.value = 5.017500;
+
     printf("breakdur: find duration of breakpoint file\n");
 
     if (argc < 2)
@@ -58,7 +62,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    fp = menu_mode(fp, argv[1], flag);
+    fp = menu_mode(fp, file_name, flag);
 
     // fp = fopen(argv[1], "r+");
 
@@ -71,6 +75,7 @@ int main(int argc, char *argv[])
     size = 0;
 
     points = get_breakpoints(fp, &size);
+    stretch_times(fp, size, 3.0);
 
     if (points == NULL)
     {
@@ -102,16 +107,16 @@ int main(int argc, char *argv[])
 
     printf("duration: %f seconds\n", dur);
 
-    point = maxpoint(points, size);
+    point_to_Store = maxpoint(points, size);
 
-    printf("maximum value: %f at %f secs\n", point.value, point.time);
+    printf("maximum value: %f at %f secs\n", point_to_Store.value, point_to_Store.time);
 
     // points = normalize(fp, &size, 1.0);
-    // points = stretch_times(fp, &size, 3.0);
+
     // points = scale_by_factor(fp, &size, 2);
     // insert_point(fp, to_add);
 
-    delete_point(fp, &size, to_add);
+    //delete_point(fp, &size, to_add);
 
     free(points);
     fclose(fp);
@@ -203,15 +208,15 @@ BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints)
 }
 
 /* New functions */
-BREAKPOINT *stretch_times(FILE *fp, unsigned long *size, TIME timeFactor)
+BREAKPOINT *stretch_times(FILE *fp, unsigned long size, TIME timeFactor)
 {
     BREAKPOINT *points;
 
-    points = get_breakpoints(fp, size);
+    points = get_breakpoints(fp, &size);
     fputs("\n////////////////////////////////\n", fp);
     fprintf(fp, "TimeStretch by a factor of %.1lfx:\n", timeFactor);
 
-    for (int i = 0; i < *size; i++)
+    for (int i = 0; i < size; i++)
     {
         points[i].time *= timeFactor;
         fprintf(fp, "%lf %lf\n", points[i].time, points[i].value);
