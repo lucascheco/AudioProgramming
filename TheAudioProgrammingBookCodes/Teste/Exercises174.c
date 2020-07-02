@@ -254,7 +254,10 @@ BREAKPOINT *shift_Up(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE sh
 
 BREAKPOINT *shift_Down(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE shiftFactor)
 {
-    fprintf(fp, "\nShifted down by a factor of %.1lfx:\n", shiftFactor);
+    fclose(fp);
+    fp = fopen("breakb.txt", "w");
+
+    //fprintf(fp, "\nShifted down by a factor of %.1lfx:\n", shiftFactor);
 
     for (int i = 0; i < *size; i++)
     {
