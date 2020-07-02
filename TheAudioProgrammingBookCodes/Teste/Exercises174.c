@@ -22,13 +22,13 @@ BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize);
 BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints);
 
 /* NEW functions */
-BREAKPOINT *stretch_times(FILE *fp, unsigned long size, TIME timeFactor);
+BREAKPOINT *stretch_times(FILE *fp, BREAKPOINT *points, unsigned long size, TIME timeFactor);
 
-BREAKPOINT *normalize(FILE *fp, unsigned long *size, VALUE normalFactor);
+BREAKPOINT *normalize(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE normalFactor);
 
-BREAKPOINT *shift_Up(FILE *fp, unsigned long *size, VALUE shiftFactor);
+BREAKPOINT *shift_Up(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE shiftFactor);
 
-BREAKPOINT *shift_Down(FILE *fp, unsigned long *size, VALUE shiftFactor);
+BREAKPOINT *shift_Down(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE shiftFactor);
 
 BREAKPOINT *scale_by_factor(FILE *fp, unsigned long *size, unsigned long scaleFactor);
 
@@ -40,6 +40,7 @@ int *insert_point(FILE *fp, BREAKPOINT p);
 
 int *delete_point(FILE *fp, unsigned long *size, BREAKPOINT p);
 
+/* MAIN FUNCTION */
 int main(int argc, char *argv[])
 {
     unsigned long size;
@@ -64,8 +65,6 @@ int main(int argc, char *argv[])
 
     fp = menu_mode(fp, file_name, flag);
 
-    // fp = fopen(argv[1], "r+");
-
     if (fp == NULL)
     {
         printf("No FILE opened.\n");
@@ -75,7 +74,6 @@ int main(int argc, char *argv[])
     size = 0;
 
     points = get_breakpoints(fp, &size);
-    stretch_times(fp, size, 3.0);
 
     if (points == NULL)
     {
@@ -100,7 +98,15 @@ int main(int argc, char *argv[])
         fclose(fp);
         return 1;
     }
+   
+    //stretch_times(fp, points, size, 3.0);
+    
+    //normalize(fp, points, &size, 4.0);
+   
+    //shift_Up(fp, points, &size, 5.0);
 
+    shift_Down(fp, points, &size, 5.0);
+    
     printf("read %lu breakpoints\n", size);
 
     dur = points[size - 1].time;
@@ -110,13 +116,6 @@ int main(int argc, char *argv[])
     point_to_Store = maxpoint(points, size);
 
     printf("maximum value: %f at %f secs\n", point_to_Store.value, point_to_Store.time);
-
-    // points = normalize(fp, &size, 1.0);
-
-    // points = scale_by_factor(fp, &size, 2);
-    // insert_point(fp, to_add);
-
-    //delete_point(fp, &size, to_add);
 
     free(points);
     fclose(fp);
@@ -208,11 +207,8 @@ BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints)
 }
 
 /* New functions */
-BREAKPOINT *stretch_times(FILE *fp, unsigned long size, TIME timeFactor)
+BREAKPOINT *stretch_times(FILE *fp, BREAKPOINT *points, unsigned long size, TIME timeFactor)
 {
-    BREAKPOINT *points;
-
-    points = get_breakpoints(fp, &size);
     fputs("\n////////////////////////////////\n", fp);
     fprintf(fp, "TimeStretch by a factor of %.1lfx:\n", timeFactor);
 
@@ -225,15 +221,13 @@ BREAKPOINT *stretch_times(FILE *fp, unsigned long size, TIME timeFactor)
     return points;
 }
 
-BREAKPOINT *normalize(FILE *fp, unsigned long *size, VALUE normalFactor)
+BREAKPOINT *normalize(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE normalFactor)
 {
-    BREAKPOINT *points, maximumpoint;
-
-    points = get_breakpoints(fp, size);
+    BREAKPOINT maximumpoint;
 
     maximumpoint = maxpoint(points, *size);
 
-    fprintf(fp, "Normalized by a factor of %lf:\n", normalFactor);
+    fprintf(fp, "\nNormalized by a factor of %lf:\n", normalFactor);
     fprintf(fp, "Every breakpoint reduced by %.1lf%%\n", ((maximumpoint.value - normalFactor) * 100) / maximumpoint.value);
 
     for (int i = 0; i < *size; i++)
@@ -245,13 +239,9 @@ BREAKPOINT *normalize(FILE *fp, unsigned long *size, VALUE normalFactor)
     return points;
 }
 
-BREAKPOINT *shift_Up(FILE *fp, unsigned long *size, VALUE shiftFactor)
+BREAKPOINT *shift_Up(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE shiftFactor)
 {
-    BREAKPOINT *points;
-
-    points = get_breakpoints(fp, size);
-
-    fprintf(fp, "Shifted up by a factor of %.1lfx:\n", shiftFactor);
+    fprintf(fp, "\nShifted up by a factor of %.1lfx:\n", shiftFactor);
 
     for (int i = 0; i < *size; i++)
     {
@@ -262,13 +252,9 @@ BREAKPOINT *shift_Up(FILE *fp, unsigned long *size, VALUE shiftFactor)
     return points;
 }
 
-BREAKPOINT *shift_Down(FILE *fp, unsigned long *size, VALUE shiftFactor)
+BREAKPOINT *shift_Down(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE shiftFactor)
 {
-    BREAKPOINT *points;
-
-    points = get_breakpoints(fp, size);
-
-    fprintf(fp, "Shifted down by a factor of %.1lfx:\n", shiftFactor);
+    fprintf(fp, "\nShifted down by a factor of %.1lfx:\n", shiftFactor);
 
     for (int i = 0; i < *size; i++)
     {
