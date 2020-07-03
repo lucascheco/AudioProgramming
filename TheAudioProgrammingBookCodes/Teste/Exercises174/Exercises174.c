@@ -30,7 +30,7 @@ BREAKPOINT *shift_Up(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE sh
 
 BREAKPOINT *shift_Down(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE shiftFactor);
 
-BREAKPOINT *scale_by_factor(FILE *fp, unsigned long *size, unsigned long scaleFactor);
+BREAKPOINT *scale_by_factor(FILE *fp, BREAKPOINT *points, unsigned long *size, unsigned long scaleFactor);
 
 BREAKPOINT *truncate(FILE *fp, unsigned long *size);
 
@@ -48,10 +48,11 @@ int main(int argc, char *argv[])
     BREAKPOINT point_to_Store, *points, to_add;
     FILE *fp;
     char *file_name;
-    file_name = argv[1];
     flagOption *flag;
     flag = (flagOption *)malloc(sizeof(flagOption *));
 
+    file_name = argv[1];
+    
     to_add.time = 3.000000; 
     to_add.value = 5.017500;
 
@@ -105,7 +106,9 @@ int main(int argc, char *argv[])
    
     //shift_Up(fp, points, &size, 5.0);
 
-    shift_Down(fp, points, &size, 5.0);
+    // shift_Down(fp, points, &size, 5.0);
+
+    scale_by_factor(fp, points, &size, 2);
     
     printf("read %lu breakpoints\n", size);
 
@@ -126,17 +129,19 @@ int main(int argc, char *argv[])
 /* FUNCTIONS*/
 BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize)
 {
-    int got;
-    unsigned long npoints = 0, size = 64;
-    TIME lasttime = 0.0;
-    BREAKPOINT *points = NULL;
-    char line[80];
-
-    if (fp == NULL)
+    int got;                                // To handle the sscanf.
+    unsigned long npoints = 0, size = 64;   // Initial size.
+    TIME lasttime = 0.0;                    // To track the last time.
+    BREAKPOINT *points = NULL;              // To make sure that the array is empty.
+    char line[80];                          // To read each line of the FILE, max 80 characters.
+    
+    /* If the FILE is not opened. */
+    if (fp == NULL)                         
         return NULL;
-
+    /* Allocating space for points. */
     points = (BREAKPOINT *)malloc(sizeof(BREAKPOINT) * size);
-
+    
+    /* If does not have enough space. */
     if (points == NULL)
         return NULL;
 
@@ -241,7 +246,9 @@ BREAKPOINT *normalize(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE n
 
 BREAKPOINT *shift_Up(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE shiftFactor)
 {
-    fprintf(fp, "\nShifted up by a factor of %.1lfx:\n", shiftFactor);
+    fclose(fp);
+    fp = fopen("breakb.txt", "w");
+    //fprintf(fp, "\nShifted up by a factor of %.1lfx:\n", shiftFactor);
 
     for (int i = 0; i < *size; i++)
     {
@@ -268,9 +275,9 @@ BREAKPOINT *shift_Down(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE 
     return points;
 }
 
-BREAKPOINT *scale_by_factor(FILE *fp, unsigned long *size, unsigned long scaleFactor)
+BREAKPOINT *scale_by_factor(FILE *fp, BREAKPOINT *points, unsigned long *size, unsigned long scaleFactor)
 {
-    BREAKPOINT *points, *aux;
+    BREAKPOINT *aux;
     BREAKPOINT *temp;
     TIME  auxTime;
     VALUE auxValue;
@@ -278,8 +285,7 @@ BREAKPOINT *scale_by_factor(FILE *fp, unsigned long *size, unsigned long scaleFa
     int k = 0;
     int countGuard = 0;
 
-    aux = (BREAKPOINT *)malloc(*size * sizeof(BREAKPOINT *));
-    points = get_breakpoints(fp, size);
+    aux = (BREAKPOINT *)malloc(*size * sizeof(BREAKPOINT *)); 
     aux = points;
     temp = (BREAKPOINT *)realloc(points, ((*size) * scaleFactor) * sizeof(BREAKPOINT) + 1);
     points = temp;
