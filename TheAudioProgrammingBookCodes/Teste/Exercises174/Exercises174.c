@@ -126,11 +126,11 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-/* FUNCTIONS*/
+/* FUNCTIONS */
 BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize)
 {
     int got;                                // To handle the sscanf.
-    unsigned long npoints = 0, size = 64;   // Initial size.
+    unsigned long npoints = 0, size = 64;   // A counter "npoints" and a initial size.
     TIME lasttime = 0.0;                    // To track the last time.
     BREAKPOINT *points = NULL;              // To make sure that the array is empty.
     char line[80];                          // To read each line of the FILE, max 80 characters.
@@ -145,8 +145,14 @@ BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize)
     if (points == NULL)
         return NULL;
 
+    /* fgets => get the data from the FILE to the line variable */
+    /*
+        I believe when is reached the end of FILE the "while" breaks or when a condition on if
+        statements is true.
+    */
     while (fgets(line, 80, fp))
     {
+        /* To handle error we store the sscanf output to variable "got". */
         got = sscanf(line, "%lf%lf", &points[npoints].time, &points[npoints].value);
 
         if (got < 0)
@@ -158,21 +164,32 @@ BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize)
             break;
         }
 
+        /* 
+            Time needs to increase. So "points[i].time < lasttime" or 
+            "points[i].time < points[i + 1].time". 
+        */
         if (points[npoints].time < lasttime)
         {
             printf("data error at point %lu: time not increasing\n", npoints + 1);
             break;
         }
-
+        /* To store lasttime. */
         lasttime = points[npoints].time;
-
+        
+        /* 
+            Now we increment "npoints" and compare with initial size,
+            if reached the size we realloc more memory to the "points".
+        */
         if (++npoints == size)
         {
             BREAKPOINT *temp;
+            /* "size" = 64 + 64 */
             size += npoints;
 
+            /* We store to a "temp" variable to handle error and expand "npoints" size. */
             temp = (BREAKPOINT *)realloc(points, sizeof(BREAKPOINT) * size);
-
+            
+            /* If not enough memory, is safer to "free" "npoints" and set it to "NULL". */
             if (temp == NULL)
             {
                 npoints = 0;
@@ -181,13 +198,19 @@ BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize)
                 break;
             }
 
+            /* "npoints" = extension. */
             points = temp;
         }
     }
 
+    /* 
+        If not enough memory ro realloc we set "npoints" to zero and this if statement 
+        will not be triggered. The "psize" reference will not be changed.
+    */
     if (npoints)
         *psize = npoints;
-
+    
+    // We return the "points" read from the FILE.
     return points;
 }
 
