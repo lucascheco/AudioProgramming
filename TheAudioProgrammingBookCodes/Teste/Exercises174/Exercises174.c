@@ -129,6 +129,12 @@ int main(int argc, char *argv[])
 /* FUNCTIONS */
 BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize)
 {
+    /* 
+        On function parameters we pass the FILE where the breakpoints are,
+        and when we want to return more than one value, we pass the "psize"
+        parameter where it will change the variable that you passed and return
+        the size or the number of breakpoints.
+    */
     int got;                                // To handle the sscanf.
     unsigned long npoints = 0, size = 64;   // A counter "npoints" and a initial size.
     TIME lasttime = 0.0;                    // To track the last time.
@@ -216,12 +222,18 @@ BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize)
 
 BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints)
 {
-    int i;
-    BREAKPOINT point;
+    /* On function parameters we pass the array of points and its size. */
+    int i; // A counter for the for loop.
+    BREAKPOINT point; // A aux variable to store the maxpoint.
 
-    point.time = points[0].time;
+    // To initialize the point variable with the initial value of the array.
+    point.time = points[0].time; 
     point.value = points[0].value;
 
+    /*
+        This will compare each breakpoint from the array and store the biggest to
+        the "point" variable.
+    */
     for (i = 0; i < npoints; i++)
     {
         if (points[i].value > point.value)
@@ -231,15 +243,26 @@ BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints)
         }
     }
 
+    // Return the biggest.
     return point;
 }
 
 /* New functions */
 BREAKPOINT *stretch_times(FILE *fp, BREAKPOINT *points, unsigned long size, TIME timeFactor)
 {
+    // For instance I do not want to override the breakpoints or create new files.
+    // Just append some text, and the breakpoints changes.
+    /*
+        On function parameter we pass:
+            -FILE: to append the data.
+            -Breakpoints array: to modify.
+            -The size: to simplify the function.
+            -Timefactor: the how long or short do you want to stretch.
+    */
     fputs("\n////////////////////////////////\n", fp);
     fprintf(fp, "TimeStretch by a factor of %.1lfx:\n", timeFactor);
-
+    
+    /* We just multiply the time by the factor. */
     for (int i = 0; i < size; i++)
     {
         points[i].time *= timeFactor;
