@@ -22,6 +22,10 @@ BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize);
 BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints);
 
 /* NEW functions */
+TIME last_Time(const BREAKPOINT *points, unsigned long npoints);
+
+int number_of_breakpoints(const BREAKPOINT *points);
+
 BREAKPOINT *stretch_times(FILE *fp, BREAKPOINT *points, unsigned long size, TIME timeFactor);
 
 BREAKPOINT *normalize(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE normalFactor);
@@ -30,15 +34,15 @@ BREAKPOINT *shift_Up(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE sh
 
 BREAKPOINT *shift_Down(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE shiftFactor);
 
-BREAKPOINT *scale_by_factor(FILE *fp, BREAKPOINT *points, unsigned long *size, unsigned long scaleFactor);
+BREAKPOINT *scale_by_factor(FILE *fp, BREAKPOINT *points, unsigned long scaleFactor);
 
 BREAKPOINT *truncate(FILE *fp, unsigned long *size);
 
 BREAKPOINT *extend(FILE *fp, unsigned long *size);
 
-int *insert_point(FILE *fp, BREAKPOINT p);
+int insert_point(FILE *fp, BREAKPOINT *points, BREAKPOINT p);
 
-int *delete_point(FILE *fp, unsigned long *size, BREAKPOINT p);
+int delete_point(FILE *fp, BREAKPOINT *points, BREAKPOINT p);
 
 /* MAIN FUNCTION */
 int main(int argc, char *argv[])
@@ -53,9 +57,9 @@ int main(int argc, char *argv[])
 
     file_name = argv[1];
     
-    to_add.time = 3.000000; 
-    to_add.value = 5.017500;
-
+    to_add.time = 0.000000; 
+    to_add.value = 4.000000;
+    
     printf("breakdur: find duration of breakpoint file\n");
 
     if (argc < 2)
@@ -75,6 +79,8 @@ int main(int argc, char *argv[])
     size = 0;
 
     points = get_breakpoints(fp, &size);
+
+    printf("O numero de breakpoints %d\n", number_of_breakpoints(points));
 
     if (points == NULL)
     {
@@ -100,15 +106,19 @@ int main(int argc, char *argv[])
         return 1;
     }
    
+    // insert_point(fp, points, to_add);
+
+    //delete_point(fp, points, to_add);
+    
     //stretch_times(fp, points, size, 3.0);
     
-    //normalize(fp, points, &size, 4.0);
+    //normalize(fp, points, &size, 60.0);
    
     //shift_Up(fp, points, &size, 5.0);
 
     // shift_Down(fp, points, &size, 5.0);
 
-    scale_by_factor(fp, points, &size, 2);
+    scale_by_factor(fp, points, 1);
     
     printf("read %lu breakpoints\n", size);
 
@@ -248,6 +258,25 @@ BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints)
 }
 
 /* New functions */
+
+TIME last_Time(const BREAKPOINT *points, unsigned long npoints)
+{
+    return points[npoints - 1].time;
+}
+
+int number_of_breakpoints(const BREAKPOINT *points)
+{
+    int i = 0;
+
+    while (points[i].time < points[i + 1].time)
+        i++;
+    
+    if(i == 0)
+        return 0;   
+    else
+        return i + 1;
+}
+
 BREAKPOINT *stretch_times(FILE *fp, BREAKPOINT *points, unsigned long size, TIME timeFactor)
 {
     // For instance I do not want to override the breakpoints or create new files.
@@ -274,15 +303,33 @@ BREAKPOINT *stretch_times(FILE *fp, BREAKPOINT *points, unsigned long size, TIME
 
 BREAKPOINT *normalize(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE normalFactor)
 {
-    BREAKPOINT maximumpoint;
+    /*
+        On function parameter we pass:
+            -FILE: to append the data.
+            -Breakpoints array: to modify.
+            -The size: to simplify the function.
+            -Normalfactor: what value of reference.
+    */
 
-    maximumpoint = maxpoint(points, *size);
+    BREAKPOINT maximumpoint; // To store the maximum point we use the maxpoint function.
+
+    maximumpoint = maxpoint(points, *size); 
 
     fprintf(fp, "\nNormalized by a factor of %lf:\n", normalFactor);
-    fprintf(fp, "Every breakpoint reduced by %.1lf%%\n", ((maximumpoint.value - normalFactor) * 100) / maximumpoint.value);
 
+    /* This expression on "fprintf" translate to percentage the value that will be normalized. */
+    /*
+        dif --- x    ---> x = (dif * 100) / max
+        max --- 100  ---> x = expression
+    */
+    if ((maximumpoint.value - normalFactor) > 0)
+        fprintf(fp, "Every breakpoint reduced by %.1lf%%\n", ((maximumpoint.value - normalFactor) * 100) / maximumpoint.value);
+    else
+        fprintf(fp, "Every breakpoint increased by %.1lf%%\n", ((normalFactor - maximumpoint.value) * 100) / maximumpoint.value);
+    
     for (int i = 0; i < *size; i++)
     {
+        /* Here we reduce every breakpoint by equaly amount. */
         points[i].value = normalFactor * (points[i].value / maximumpoint.value);
         fprintf(fp, "%lf %lf\n", points[i].time, points[i].value);
     }
@@ -292,9 +339,14 @@ BREAKPOINT *normalize(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE n
 
 BREAKPOINT *shift_Up(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE shiftFactor)
 {
-    fclose(fp);
-    fp = fopen("breakb.txt", "w");
-    //fprintf(fp, "\nShifted up by a factor of %.1lfx:\n", shiftFactor);
+    /*
+        On function parameter we pass:
+            -FILE: to append the data.
+            -Breakpoints array: to modify.
+            -The size: to simplify the function.
+            -shiftfactor: what value do you want to shiftup all values.
+    */
+    fprintf(fp, "\nShifted up by a factor of %.1lfx:\n", shiftFactor);
 
     for (int i = 0; i < *size; i++)
     {
@@ -307,10 +359,14 @@ BREAKPOINT *shift_Up(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE sh
 
 BREAKPOINT *shift_Down(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE shiftFactor)
 {
-    fclose(fp);
-    fp = fopen("breakb.txt", "w");
-
-    //fprintf(fp, "\nShifted down by a factor of %.1lfx:\n", shiftFactor);
+    /*
+        On function parameter we pass:
+            -FILE: to append the data.
+            -Breakpoints array: to modify.
+            -The size: to simplify the function.
+            -shiftfactor: what value do you want to shiftdown all values.
+    */
+    fprintf(fp, "\nShifted down by a factor of %.1lfx:\n", shiftFactor);
 
     for (int i = 0; i < *size; i++)
     {
@@ -321,25 +377,26 @@ BREAKPOINT *shift_Down(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE 
     return points;
 }
 
-BREAKPOINT *scale_by_factor(FILE *fp, BREAKPOINT *points, unsigned long *size, unsigned long scaleFactor)
+BREAKPOINT *scale_by_factor(FILE *fp, BREAKPOINT *points, unsigned long scaleFactor)
 {
     BREAKPOINT *aux;
     BREAKPOINT *temp;
     TIME  auxTime;
     VALUE auxValue;
     int j = 0;
-    int k = 0;
+    int k = 0; 
     int countGuard = 0;
+    int size;
 
-    aux = (BREAKPOINT *)malloc(*size * sizeof(BREAKPOINT *)); 
+    size = number_of_breakpoints(points);
+    aux = (BREAKPOINT *)malloc(size * sizeof(BREAKPOINT *)); 
     aux = points;
-    temp = (BREAKPOINT *)realloc(points, ((*size) * scaleFactor) * sizeof(BREAKPOINT) + 1);
-    points = temp;
-
+    temp = (BREAKPOINT *)malloc((size * scaleFactor) * sizeof(BREAKPOINT) + 1);
+    
     fputs("\n////////////////////////////////\n", fp);
     fprintf(fp, "Scale by a factor of %lux:\n", scaleFactor);
 
-    for (int i = 0; i + 1 < *size; i++)
+    for (int i = 0; i + 1 < size; i++)
     {
         auxTime  = (aux[i + 1].time  - aux[i].time)  / (double)(scaleFactor + 1);
         auxValue = (aux[i + 1].value - aux[i].value) / (double)(scaleFactor + 1);
@@ -349,41 +406,56 @@ BREAKPOINT *scale_by_factor(FILE *fp, BREAKPOINT *points, unsigned long *size, u
 
         for (j = countGuard, k = 0; k < scaleFactor + 1; j++, k++)
         {
-            points[i + j].time  = aux[i].time  + auxTime  * (double)k;
-            points[i + j].value = aux[i].value + auxValue * (double)k;
+            temp[i + j].time  = aux[i].time  + auxTime  * (double)k;
+            temp[i + j].value = aux[i].value + auxValue * (double)k;
 
-            fprintf(fp, "%lf %lf\n", points[i + j].time, points[i + j].value);
+            fprintf(fp, "%lf %lf\n", temp[i + j].time, temp[i + j].value);
             countGuard++;
         }
     }
 
+    points = temp;
     free(temp);
     free(aux);
 
     return points;
 }
 
-int *insert_point(FILE *fp, BREAKPOINT p)
-{
-    fprintf(fp,"%lf %lf\n", p.time, p.value);
+int insert_point(FILE *fp, BREAKPOINT *points, BREAKPOINT p)
+{ 
+    TIME lastTime;
+    lastTime = last_Time(points, number_of_breakpoints(points));
+    fclose(fp);
+    fp = fopen("breakb.txt", "a");
+    
+    if (p.time < lastTime)
+    {
+        printf("Time needs to increase!\n");
+        return 1;
+    }
+    else
+    {      
+        fprintf(fp,"\n%lf %lf", p.time, p.value);
 
-    return 0;
+        return 0;         
+    }
+
 }
 
-int *delete_point(FILE *fp,unsigned long *size, BREAKPOINT p)
+int delete_point(FILE *fp, BREAKPOINT *points, BREAKPOINT p)
 {
-    BREAKPOINT *points;
-    
-    points = get_breakpoints(fp, size);
+    int size;
+    size = number_of_breakpoints(points);
 
     fputs("\n////////////////////////////////\n", fp);
     fputs("Deleted point\n", fp);
-    for (int i = 0; i < *size; i++)
+    for (int i = 0; i < size; i++)
     {   
-        if (points[i].time == p.time && points[i].value == p.value)
-        {
+        /*
+            When we find the breakpoint, we do not print it.
+        */
+        if (points[i].time == p.time && points[i].value == p.value)    
             continue;
-        }
 
         fprintf(fp, "%lf %lf\n", points[i].time, points[i].value);
     }
