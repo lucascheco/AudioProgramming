@@ -389,34 +389,26 @@ BREAKPOINT *scale_by_factor(FILE *fp, BREAKPOINT *points, unsigned long scaleFac
     int size;
 
     size = number_of_breakpoints(points);
-    aux = (BREAKPOINT *)malloc(size * sizeof(BREAKPOINT *)); 
-    aux = points;
-    temp = (BREAKPOINT *)malloc((size * scaleFactor) * sizeof(BREAKPOINT) + 1);
     
     fputs("\n////////////////////////////////\n", fp);
     fprintf(fp, "Scale by a factor of %lux:\n", scaleFactor);
 
-    for (int i = 0; i + 1 < size; i++)
+    for (int i = 0; i < size; i++)
     {
-        auxTime  = (aux[i + 1].time  - aux[i].time)  / (double)(scaleFactor + 1);
-        auxValue = (aux[i + 1].value - aux[i].value) / (double)(scaleFactor + 1);
+        auxTime  = (points[i + 1].time  - points[i].time)  / (double)(scaleFactor + 1);
+        auxValue = (points[i + 1].value - points[i].value) / (double)(scaleFactor + 1);
 
         if (auxValue < 0)
-            auxValue = (aux[i].value - aux[i + 1].value) / (double)(scaleFactor + 1);
+            auxValue = (points[i].value - points[i + 1].value) / (double)(scaleFactor + 1);
 
-        for (j = countGuard, k = 0; k < scaleFactor + 1; j++, k++)
-        {
-            temp[i + j].time  = aux[i].time  + auxTime  * (double)k;
-            temp[i + j].value = aux[i].value + auxValue * (double)k;
+        for (k = 0; k <= scaleFactor; k++)
+        {  
+            auxTime  = points[i].time  + auxTime  * (double)k;
+            auxValue = points[i].value + auxValue * (double)k;
 
-            fprintf(fp, "%lf %lf\n", temp[i + j].time, temp[i + j].value);
-            countGuard++;
+            fprintf(fp, "%lf %lf\n", auxTime, auxValue);
         }
     }
-
-    points = temp;
-    free(temp);
-    free(aux);
 
     return points;
 }
