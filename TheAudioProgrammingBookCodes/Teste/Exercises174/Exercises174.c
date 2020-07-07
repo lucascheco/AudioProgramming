@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
 
     // delete_point(fp, points, to_add);
     
-    // stretch_times(fp, points, size, 3.0);
+    stretch_times(fp, points, size, 3.0);
     
     // normalize(fp, points, &size, 10.0);
    
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 
     // shift_Down(fp, points, &size, 5.0);
 
-    scale_by_factor(fp, points, 2);
+    // scale_by_factor(fp, points, 2);
     
     printf("read %lu breakpoints\n", size);
 
