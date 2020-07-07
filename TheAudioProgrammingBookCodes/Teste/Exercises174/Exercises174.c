@@ -108,17 +108,17 @@ int main(int argc, char *argv[])
    
     // insert_point(fp, points, to_add);
 
-    //delete_point(fp, points, to_add);
+    // delete_point(fp, points, to_add);
     
-    //stretch_times(fp, points, size, 3.0);
+    // stretch_times(fp, points, size, 3.0);
     
-    //normalize(fp, points, &size, 60.0);
+    // normalize(fp, points, &size, 10.0);
    
-    //shift_Up(fp, points, &size, 5.0);
+    // shift_Up(fp, points, &size, 5.0);
 
     // shift_Down(fp, points, &size, 5.0);
 
-    scale_by_factor(fp, points, 1);
+    scale_by_factor(fp, points, 2);
     
     printf("read %lu breakpoints\n", size);
 
@@ -379,13 +379,9 @@ BREAKPOINT *shift_Down(FILE *fp, BREAKPOINT *points, unsigned long *size, VALUE 
 
 BREAKPOINT *scale_by_factor(FILE *fp, BREAKPOINT *points, unsigned long scaleFactor)
 {
-    BREAKPOINT *aux;
-    BREAKPOINT *temp;
     TIME  auxTime;
     VALUE auxValue;
-    int j = 0;
     int k = 0; 
-    int countGuard = 0;
     int size;
 
     size = number_of_breakpoints(points);
@@ -393,23 +389,23 @@ BREAKPOINT *scale_by_factor(FILE *fp, BREAKPOINT *points, unsigned long scaleFac
     fputs("\n////////////////////////////////\n", fp);
     fprintf(fp, "Scale by a factor of %lux:\n", scaleFactor);
 
-    for (int i = 0; i < size; i++)
+    for (int i = 1; i < size; i++)
     {
-        auxTime  = (points[i + 1].time  - points[i].time)  / (double)(scaleFactor + 1);
-        auxValue = (points[i + 1].value - points[i].value) / (double)(scaleFactor + 1);
+        auxTime  = (points[i].time  - points[i - 1].time)  / (double)(scaleFactor + 1);
+        auxValue = (points[i].value - points[i - 1].value) / (double)(scaleFactor + 1);
 
-        if (auxValue < 0)
-            auxValue = (points[i].value - points[i + 1].value) / (double)(scaleFactor + 1);
-
+        // if (auxValue < 0)
+        //     auxValue = (points[i - 1].value - points[i].value) / (double)(scaleFactor + 1);
+ 
         for (k = 0; k <= scaleFactor; k++)
-        {  
-            auxTime  = points[i].time  + auxTime  * (double)k;
-            auxValue = points[i].value + auxValue * (double)k;
-
-            fprintf(fp, "%lf %lf\n", auxTime, auxValue);
+        { 
+            fprintf(fp, "%lf %lf\n", points[i - 1].time  + auxTime  * (double)k, points[i - 1].value + auxValue * (double)k);
         }
+        
     }
 
+    fprintf(fp, "%lf %lf\n", points[size - 1].time, points[size - 1].value);
+    
     return points;
 }
 
