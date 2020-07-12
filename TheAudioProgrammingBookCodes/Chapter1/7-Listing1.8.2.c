@@ -14,6 +14,9 @@ int main(int argc, char **argv)
     double dur, step, start, end, thisstep;
     double fac, valrange, offset;
     const double verysmall = 1.0e-4; /* -80dB */
+    FILE   *fp;
+
+    fp = fopen("expbrk.txt", "w");
 
     if (argc != 5)
     {
@@ -71,14 +74,17 @@ int main(int argc, char **argv)
     for (i = 0; i < npoints; i++)
     {
         fprintf(stdout, "%.4lf\t%.8lf\n", thisstep, offset + (start * valrange));
+        fprintf(fp, "%.4lf\t%.8lf\n", thisstep, offset + (start * valrange));
         start *= fac;
         thisstep += step;
     }
 
     /* print final value */
     fprintf(stdout, "%.4lf\t%.8lf\n", thisstep, offset + (start * valrange));
+    fprintf(fp, "%.4lf\t%.8lf\n", thisstep, offset + (start * valrange));
 
     fprintf(stderr, "done\n");
 
+    fclose(fp);
     return 0;
 }
