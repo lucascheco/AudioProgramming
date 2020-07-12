@@ -35,7 +35,7 @@ int main(int argc, char **argv)
     {
         printf(     "%.4lf\t%.8lf\n", step, x);
         fprintf(fp, "%.4lf\t%.8lf\n", step, x);
-        x = a * x;
+        x *= a;
         step += k;
     }
 
