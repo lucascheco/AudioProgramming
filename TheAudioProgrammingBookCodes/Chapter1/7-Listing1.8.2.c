@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     {
         start = 1.0;
         end = verysmall;
-        valrange = - valrange;
+        valrange = -valrange;
         offset = endval;
     }
     else
