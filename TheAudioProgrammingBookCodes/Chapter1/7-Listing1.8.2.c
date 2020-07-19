@@ -2,7 +2,7 @@
 //Description: Code  from "The Audio Programming Book", chapter 1, Listing1.8.2 .
 //Date: 09/07/2020.
 
-/* expbrk.c generate exponencial attack or decay breakpoint data */
+/* expbrk.c generate exponential attack or decay breakpoint data */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -67,7 +67,6 @@ int main(int argc, char **argv)
     }
     
     thisstep = 0.0;
-    
     /* make normalized curve, scale output to input values, range */
     fac = pow(end / start, 1.0 / npoints);
 
