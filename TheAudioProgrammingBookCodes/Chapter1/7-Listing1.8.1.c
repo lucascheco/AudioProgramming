@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 
     k    = dur / nsteps; /* the constant time increment */
     a    = exp(-k / T);  /* calc the constant ratio value */
-    x    = 1.0;          /* starting value for the dacay */
+    x    = 1.0;          /* starting value for the decay */
     step = 0.0;
 
     for (i = 0; i < nsteps; i++)

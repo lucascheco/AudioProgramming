@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        startval = verysmall;
+        start = verysmall;
         end = 1.0;
         offset = startval;
     }
