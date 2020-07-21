@@ -2,6 +2,7 @@
 //Description: Code  from "The Audio Programming Book", chapter 1, Listing1.8.1 .
 //Date: 08/07/2020.
 
+/* expdecay.c */
 /* implement formula x[t] = a * exp(-k/T) */
 #include <stdio.h>
 #include <stdlib.h>
