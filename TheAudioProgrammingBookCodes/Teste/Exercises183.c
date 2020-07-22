@@ -2,6 +2,13 @@
 //Description: Test exercise from "The Audio Programming Book", chapter 1, Exercises 1.8.3 .
 //Date: 20/06/2020.
 
+/*
+ (a)
+    I think the difference is because on expdecay the start 
+    value is normalized in 1, and this program we choose the 
+    starting value. I think that this not normalized attack applies
+    on automation, the normalized applies on synths.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
