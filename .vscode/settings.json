@@ -1,9 +1,19 @@
 {
     "cSpell.words": [
         "Denv",
+        "SNDAN",
+        "endiannes",
         "expad",
+        "fsamp",
+        "isfloat",
         "npoints",
+        "nsamps",
         "nsteps",
+        "sfile",
+        "srate",
+        "ssamp",
+        "tfork",
+        "tforkraw",
         "yend",
         "ystart"
     ]
