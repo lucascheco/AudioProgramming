@@ -47,10 +47,10 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    dur    = atof(argv[ARG_DUR]);
-    freq   = atof(argv[ARG_HZ]);
-    srate  = atof(argv[ARG_SR]);
-    amp    = atof(argv[ARG_AMP]);
+    dur      = atof(argv[ARG_DUR]);
+    freq     = atof(argv[ARG_HZ]);
+    srate    = atof(argv[ARG_SR]);
+    amp      = atof(argv[ARG_AMP]);
     samptype = (unsigned int)atoi(argv[ARG_TYPE]);
 
     if (samptype >  1)
