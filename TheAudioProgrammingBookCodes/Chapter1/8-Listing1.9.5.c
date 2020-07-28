@@ -30,16 +30,16 @@ const char *endinness[2] = {"big_endian", "little_endian"};
 
 int main(int argc, char **argv)
 {
-    unsigned int i, nsamps;
-    unsigned int maxframe = 0;
-    unsigned int samptype, endian, bitreverse;
-    double       samp, dur, freq, srate, amp, step;
-    double       start, end, fac, maxsamp;
-    double       twopi = 2.0 * M_PI;
-    double       angleincr;
-    FILE        *fp = NULL;
-    float        fsamp;
-    short        ssamp;
+    unsigned int i, nsamps;                         // Contador(i) ** Número de Samples(nsamps)
+    unsigned int maxframe = 0;                      //
+    unsigned int samptype, endian, bitreverse;      //
+    double       samp, dur, freq, srate, amp, step; //
+    double       start, end, fac, maxsamp;          //
+    double       twopi = 2.0 * M_PI;                //
+    double       angleincr;                         //
+    FILE        *fp = NULL;                         //
+    float        fsamp;                             //
+    short        ssamp;                             //
 
     if (argc != ARG_NARGS)
     {
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
     amp      = atof(argv[ARG_AMP]);
     samptype = (unsigned int)atoi(argv[ARG_TYPE]);
 
-    if (samptype >  1)
+    if (samptype >  1) 
     {
         printf("error: sampletype can be only 0 or 1\n");
         return 1;
