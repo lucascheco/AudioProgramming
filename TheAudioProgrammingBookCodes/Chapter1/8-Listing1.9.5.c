@@ -32,11 +32,11 @@ int main(int argc, char **argv)
 {
     unsigned int i, nsamps;                         // Contador(i) ** Número de Samples(nsamps)
     unsigned int maxframe = 0;                      //
-    unsigned int samptype, endian, bitreverse;      //
-    double       samp, dur, freq, srate, amp, step; //
+    unsigned int samptype, endian, bitreverse;      // On the if statement(samptype) ** To receive the return of byteOrder function(endian) ** (bitreverse)
+    double       samp, dur, freq, srate, amp, step; // Handle samples values(samp) ** To take duration argument(dur) ** To take frequency argument(freq) ** To take sample rate argument(srate) ** To take amp argument(amp) ** (step)
     double       start, end, fac, maxsamp;          //
-    double       twopi = 2.0 * M_PI;                //
-    double       angleincr;                         //
+    double       twopi = 2.0 * M_PI;                // To calculate 2PI
+    double       angleincr;                         //  
     FILE        *fp = NULL;                         //
     float        fsamp;                             //
     short        ssamp;                             //
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     }
 
     /* create binary file: not all systems require the 'b' */
-    fp = fopen(argv[ARG_OUTFILE], "wb");
+    fp = fopen(argv[ARG_OUTFILE], "w");
 
     if (fp == NULL)
     {
