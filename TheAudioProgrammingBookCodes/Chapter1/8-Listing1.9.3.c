@@ -53,10 +53,18 @@ int main(int argc, char **argv)
         /* apply exp decay */
         x    *= a;
         samp *= x;
-        fprintf(fp, "%.8lf\n", samp);
+        if (0 > fprintf(fp, "%.8lf\n", samp))
+        {
+            fprintf(stderr, "error: unable to print on stdout stream\n");
+            return 1;
+        }
     }
 
-    fclose(fp);
+    if (fclose(fp) != 0)
+    {
+        fprintf(stderr, "error: unable to close the FILE stream\n");
+        return 1;
+    }
     
     printf("done\n");
 

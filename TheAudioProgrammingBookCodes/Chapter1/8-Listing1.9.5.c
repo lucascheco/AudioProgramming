@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     }
 
     /* create binary file: not all systems require the 'b' */
-    fp = fopen(argv[ARG_OUTFILE], "w");
+    fp = fopen(argv[ARG_OUTFILE], "wb");
 
     if (fp == NULL)
     {
@@ -79,7 +79,11 @@ int main(int argc, char **argv)
     fac = pow(end / start, 1.0 / nsamps);
     endian = byte_order();
 
-    printf("Writing %d %s samples\n", nsamps, endinness[endian]);
+    if (0 > printf("Writing %d %s samples\n", nsamps, endinness[endian]))
+    {
+        fprintf(stderr, "error: unable to print on STDOUT stream.\n");
+        return 1;
+    }
 
     /* run the loop for this samptype */
     if (samptype == RAWSAMP_SHORT)
@@ -113,9 +117,9 @@ int main(int argc, char **argv)
             samp = amp * sin(angleincr * i);
             samp *= start;
             start *= fac;
-            ssamp = (short)samp;
+            fsamp = (float)samp;
 
-            if (fwrite(&ssamp, sizeof(float), 1, fp) != 1)
+            if (fwrite(&fsamp, sizeof(float), 1, fp) != 1)
             {
                 printf("Error writing data to file\n");
                 return 1;
@@ -129,7 +133,11 @@ int main(int argc, char **argv)
         }        
     }
 
-    fclose(fp);
+    if (fclose(fp) != 0)
+    {
+        fprintf(stderr, "error: unable to close the FILE stream\n");
+        return 1;
+    }
 
     printf("done. Maximum sample value = %.8lf at frame %d\n", maxsamp, maxframe);
     

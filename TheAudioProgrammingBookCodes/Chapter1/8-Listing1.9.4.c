@@ -56,13 +56,21 @@ int main(int argc, char **argv)
         samp *= start;
         start *= fac;
 
-        fprintf(fp, "%.8lf\n", samp);
+        if (0 > fprintf(fp, "%.8lf\n", samp))
+        {
+            fprintf(stderr, "error: unable to print on FILE stream\n");
+            return 1;
+        }
 
         if (fabs(samp) > maxamp)
             maxamp = fabs(samp);
     }
 
-    fclose(fp);
+    if (fclose(fp) != 0)
+    {
+        fprintf(stderr, "error: unable to close the FILE stream\n");
+        return 1;
+    }
     
     printf("done. Maximum sample value = %.8lf\n", maxamp);
 

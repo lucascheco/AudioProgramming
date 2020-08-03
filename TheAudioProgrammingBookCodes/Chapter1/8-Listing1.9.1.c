@@ -29,7 +29,11 @@ int main(int argc, char **argv)
     for (i = 0; i < nsamps; i++)
     {
         samp = sin(angleincr * i);
-        fprintf(stdout, "%.21lf\n", samp);
+        if (0 > fprintf(stdout, "%.21lf\n", samp))
+        {
+            fprintf(stderr, "error: unable to print on stdout stream\n");
+            return 1;
+        }
     }
 
     fprintf(stderr, "done\n");
