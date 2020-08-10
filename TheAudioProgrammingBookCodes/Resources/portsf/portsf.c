@@ -33,7 +33,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 #include <assert.h>
 #endif
 
-#include "portsf.h"
+#include <portsf.h>
 
 #ifndef DBGFPRINTF
 #ifdef _DEBUG
@@ -64,7 +64,7 @@ int strnicmp(const char *a, const char *b, const int length);
 #else
 #define POS64(x) (x)
 #endif
-typedef int fpos_t;
+
 /* probably no good for 64bit platforms */
 #define REVDWBYTES(t) ((((t)&0xff) << 24) | (((t)&0xff00) << 8) | (((t)&0xff0000) >> 8) | (((t) >> 24) & 0xff))
 #define REVWBYTES(t) ((((t)&0xff) << 8) | (((t) >> 8) & 0xff))

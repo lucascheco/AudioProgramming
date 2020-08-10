@@ -9,7 +9,13 @@
 #include <stdlib.h>
 #include <portsf.h>
 
-enum {ARG_PROGNAME, ARG_INFILE, ARG_OUTFILE, ARG_NARGS};
+enum
+{
+    ARG_PROGNAME,
+    ARG_INFILE,
+    ARG_OUTFILE,
+    ARG_NARGS
+};
 
 int main(int argc, char *argv[])
 {
@@ -30,7 +36,7 @@ int main(int argc, char *argv[])
     {
         printf("insufficient arguments.\n"
                "usage:\n\tsf2float infile outfile\n");
-        
+
         return 1;
     }
 
@@ -51,9 +57,9 @@ int main(int argc, char *argv[])
     }
 
     /* we now have a resource, so we use goto hereafter on hitting any error */
-    
+
     /* tell user if source file is already floats */
-    if (props.samptype ==  PSF_SAMP_IEEE_FLOAT)
+    if (props.samptype == PSF_SAMP_IEEE_FLOAT)
     {
         printf("Info: infile is already in floats format.\n");
     }
@@ -66,11 +72,12 @@ int main(int argc, char *argv[])
     if (outformat == PSF_FMT_UNKNOWN)
     {
         printf("outfile name %s has unknown format.\n"
-               "Use any of .wav, .aiff, .aif, .afc, . aifc\n", argv[ARG_OUTFILE]);
+               "Use any of .wav, .aiff, .aif, .afc, . aifc\n",
+               argv[ARG_OUTFILE]);
 
         error++;
         goto exit;
-    } 
+    }
 
     props.format = outformat;
 
@@ -101,7 +108,7 @@ int main(int argc, char *argv[])
     if (peaks == NULL)
     {
         puts("No memory!\n");
-        
+
         error++;
         goto exit;
     }
@@ -110,7 +117,7 @@ int main(int argc, char *argv[])
 
     /* single-frame loop to do copy, report any errors */
     framesread = psf_sndReadFloatFrames(ifd, frame, 1);
-    
+
     totalread = 0; /* running count of sample frames */
 
     while (framesread == 1)
@@ -151,13 +158,13 @@ int main(int argc, char *argv[])
             printf("CH %d:\t%.4f at %.4f secs\n", i + 1, peaks[i].val, peaktime);
         }
     }
-    
-    /* do all cleanup */
-    exit:
+
+/* do all cleanup */
+exit:
 
     if (ifd >= 0)
         psf_sndClose(ifd);
-    
+
     if (ofd >= 0)
         psf_sndClose(ofd);
 
@@ -170,4 +177,4 @@ int main(int argc, char *argv[])
     psf_finish();
 
     return error;
-}   
+}
