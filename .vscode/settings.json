@@ -16,6 +16,7 @@
         "npoints",
         "nsamps",
         "nsteps",
+        "numeros",
         "sfile",
         "srate",
         "ssamp",
