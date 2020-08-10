@@ -34,7 +34,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 #include <assert.h>
 #endif
 
-#include "..\include\portsf.h"
+#include <portsf.h>
 
 #ifndef DBGFPRINTF
 # ifdef _DEBUG
