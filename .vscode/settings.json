@@ -1,4 +1,10 @@
 {
+<<<<<<< HEAD
+    "files.associations": {
+        "ctype.h": "c",
+        "portsf.h": "c"
+    }
+=======
     "cSpell.words": [
         "CHPEAK",
         "Denv",
@@ -25,4 +31,5 @@
         "yend",
         "ystart"
     ]
+>>>>>>> 9253afd816ec2e720fa045236ef2db2282df0539
 }
