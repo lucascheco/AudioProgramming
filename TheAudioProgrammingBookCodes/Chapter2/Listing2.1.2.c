@@ -4,7 +4,7 @@
     Date:        07/08/2020
 */
 #include <stdio.h>
-#include "..\include\portsf.h"
+#include <portsf.h>
 
 int check_sampletype(psf_stype type)
 {
