@@ -7,7 +7,7 @@
 /* sf2float.c: convert soundfile to floats */
 #include <stdio.h>
 #include <stdlib.h>
-#include <portsf.h>
+#include "..\include\portsf.h"
 
 enum
 {
