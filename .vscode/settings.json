@@ -1,27 +1,6 @@
 {
-    "cSpell.words": [
-        "CHPEAK",
-        "Denv",
-        "SNDAN",
-        "aifc",
-        "aiff",
-        "chans",
-        "endiannes",
-        "expad",
-        "fsamp",
-        "isfloat",
-        "myfile",
-        "naoexiste",
-        "naotemvalor",
-        "npoints",
-        "nsamps",
-        "nsteps",
-        "sfile",
-        "srate",
-        "ssamp",
-        "tfork",
-        "tforkraw",
-        "yend",
-        "ystart"
-    ]
+    "files.associations": {
+        "ctype.h": "c",
+        "portsf.h": "c"
+    }
 }
