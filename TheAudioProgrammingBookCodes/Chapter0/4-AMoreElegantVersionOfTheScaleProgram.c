@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: A copy from "The Audio Programming Book", chapter 0, A More Elegant Version of the Scale Program.
-//Date: 05/05/2020.
+/*
+    Author: Lucas Pacheco.
+    Description: A copy from "The Audio Programming Book", chapter 0, A More Elegant Version of the Scale Program.
+    Date: 05/05/2020.
+*/
 
 #include <stdio.h>
 #include <string.h>
