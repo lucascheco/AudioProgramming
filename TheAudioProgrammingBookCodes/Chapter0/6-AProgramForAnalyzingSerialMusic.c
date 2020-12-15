@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: A copy from "The Audio Programming Book", chapter 0, A Program for Analyzing Serial Music.
-//Date: 05/05/2020.
+/*
+    Author: Lucas Pacheco.
+    Description: A copy from "The Audio Programming Book", chapter 0, A Program for Analyzing Serial Music.
+    Date: 05/05/2020.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,6 +13,7 @@ int mod12(int note)
         note -= 12;
     while (note < 0)
         note += 12;
+
     return note;
 }
 
@@ -51,19 +54,18 @@ int main(int argc, char **argv)
 
 /*
     OUTPUT SAMPLE:
-    OBS: I didn't understand this code yet!
-        Running the code with twelve ramdom arguments -> 6-AProgramForAnalyzingSerialMusic A B C Db A B C Db A B C Db
+        Running the code with twelve ramdom arguments -> 6-AProgramForAnalyzingSerialMusic 0 2 4 5 2 4 0 4 5 4 0 2
     Output:
-        C C C C C C C C C C C 
-        C C C C C C C C C C C
-        C C C C C C C C C C C
-        C C C C C C C C C C C
-        C C C C C C C C C C C
-        C C C C C C C C C C C
-        C C C C C C C C C C C
-        C C C C C C C C C C C
-        C C C C C C C C C C C
-        C C C C C C C C C C C
-        C C C C C C C C C C C
-        C C C C C C C C C C C
+        C  D  E  F  D  E  C  E  F  E  C  D
+        Bb  C  D  Eb  C  D  Bb  D  Eb  D  Bb  C
+        Ab  Bb  C  Db  Bb  C  Ab  C  Db  C  Ab  Bb
+        G  A  B  C  A  B  G  B  C  B  G  A
+        Bb  C  D  Eb  C  D  Bb  D  Eb  D  Bb  C
+        Ab  Bb  C  Db  Bb  C  Ab  C  Db  C  Ab  Bb
+        C  D  E  F  D  E  C  E  F  E  C  D
+        Ab  Bb  C  Db  Bb  C  Ab  C  Db  C  Ab  Bb
+        G  A  B  C  A  B  G  B  C  B  G  A
+        Ab  Bb  C  Db  Bb  C  Ab  C  Db  C  Ab  Bb
+        C  D  E  F  D  E  C  E  F  E  C  D
+        Bb  C  D  Eb  C  D  Bb  D  Eb  D  Bb  C
 */
