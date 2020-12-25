@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: A test program from "The Audio Programming Book", about argc, argv.
-//Date: 17/05/2020.
+/*
+    Author: Lucas Pacheco.
+    Description: A test program from "The Audio Programming Book", about argc, argv.
+    Date: 17/05/2020.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
