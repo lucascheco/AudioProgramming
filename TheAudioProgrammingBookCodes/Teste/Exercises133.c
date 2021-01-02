@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: A test from "The Audio Programming Book", chapter 1, adding a test case.
-//Date: 14/05/2020.
+/*
+    Author: Lucas Pacheco.
+    Description: A test from "The Audio Programming Book", chapter 1, adding a test case.
+    Date: 14/05/2020.
+*/
 
 /* listing 1.3. Calculate frequency of a MIDI Note number */
 #include <stdio.h>
@@ -22,7 +24,7 @@ int main()
 
     printf("Enter MIDI note (0 - 127): ");
 
-    result = gets(message);
+    result = fgets(message, 256, stdin);
 
     if (result == NULL)
     {
@@ -36,7 +38,7 @@ int main()
         return 1;
     }
 
-    // ANSWER (a)
+    /* ANSWER (a) */
     /*
         if (1 == 1.0)
         {
@@ -47,7 +49,7 @@ int main()
             printf(" != \n");
         }
     */
-    // If we type a float will trigger this if statement.
+    /* If we type a float will trigger this if statement. */
     if (atof(message) != atoi(message))
     {
         printf("please, enter a integer value\n");
@@ -79,4 +81,9 @@ int main()
     OUTPUT SAMPLE:
         Enter MIDI note (0 - 127): 54
         frequency of MIDI note 54 = 184.997211
+*/
+/*
+    OUTPUT SAMPLE:
+        Enter MIDI note (0 - 127): 1.2
+        please, enter a integer value
 */

@@ -1,9 +1,10 @@
-//Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, Listing1.6.2 .
-//Date: 28/05/2020.
-
-// Why we use back-to-front instead of front-to-end ?
-// Auto-decrement is faster than Auto-increment, and comparison against zero is faster than comparison with some non-zero value.
+/*
+    Author: Lucas Pacheco.
+    Description: Code  from "The Audio Programming Book", chapter 1, Listing1.6.2 .
+    Date: 28/05/2020.
+*/
+/* Why we use back-to-front instead of front-to-end ? */
+/* Answer: Auto-decrement is faster than Auto-increment, and comparison against zero is faster than comparison with some non-zero value. */
 
 #include <stdio.h>
 

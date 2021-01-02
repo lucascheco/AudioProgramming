@@ -1,12 +1,14 @@
-//Author: Lucas Pacheco.
-//Description: A test exercise from "The Audio Programming Book", chapter 1, covert all programs developed so far to use argc and argv.
-//Date: 17/05/2020.
+/*
+    Author: Lucas Pacheco.
+    Description: A test exercise from "The Audio Programming Book", chapter 1, covert all programs developed so far to use argc and argv.
+    Date: 17/05/2020.
+*/
 
 /*
     OBS: Exercises 141 , 142, 143(a) in the same file. 143(b) was jumped.
 */
 
-//Exercise 1.4.1 (obs: To simplify, I only implemented one code).
+/* Exercise 1.4.1 (obs: To simplify, I only implemented one code). */
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -35,7 +37,7 @@ int main(int argc, char *argv[])
     
     frequency = atof(argv[1]);
 
-    //Exercise 1.4.3 (a).
+    /* Exercise 1.4.3 (a). */
     if(strcmp(rootA_string, "standard") == 0)
     {
         printf("You choose STANDARD ROOT.\n");
@@ -58,10 +60,10 @@ int main(int argc, char *argv[])
     }
     
     /* calculate required numbers */
-    semitone_ratio = pow(2, 1 / 12.0); /* approx. 1.0594631 */
+    semitone_ratio = pow(2.0, 1.0 / 12.0); /* approx. 1.0594631 */
 
     /* find Middle C, three semitones above low A = (rootA / 2) */
-    c5 = (rootA / 2) * pow(semitone_ratio, 3);
+    c5 = (rootA / 2) * pow(semitone_ratio, 3.0);
 
     /* MIDI Note 0 is C, 5 octaves below Middle C */
     c0 = c5 * pow(0.5, 5);

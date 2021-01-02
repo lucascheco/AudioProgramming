@@ -1,7 +1,10 @@
-//Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, writing a program to create musical scales.
-//Date: 22/05/2020.
+/*
+    Author: Lucas Pacheco.
+    Description: A test exercise from "The Audio Programming Book", chapter 1, exercise 1.5.7 .
+    Date: 31/12/2020.
+*/
 
+/* nscale  Display E.T(EqualTempered) frequencies for a N-note octave, from a given MIDI note */
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -14,7 +17,7 @@ int main(int argc, char *argv[])
     double frequencies[24];
 
     /*
-        ERROR HANDLE 
+        Erro handling. 
     */
     if (argc != 3)
     {
@@ -55,15 +58,19 @@ int main(int argc, char *argv[])
     */
 
     /* calculate required numbers */
-    ratio = pow(2, 1.0 / (double)notes); /* approx. 1.0594631 */
+    ratio = pow(2.0, 1.0 / 12.0);  /* approx. 1.0594631 */
 
     /* find Middle C, three semitones above low A = 220 */
-    c5 = 220.0 * pow(ratio, 3);
+    c5 = 220.0 * pow(ratio, 3.0);
 
     /* MIDI Note 0 is C, 5 octaves below Middle C */
-    c0 = c5 * pow(0.5, 5);
+    c0 = c5 * pow(0.5, 5.0);
 
-    frequency = c0 * pow(ratio, midinote);
+    frequency = c0 * pow(ratio, (double)midinote);
+
+    /* Custom ratio -> User Input */
+    ratio = pow(2.0, 1.0 / (double)notes);
+
     for (int i = 0; i < notes; i++)
     {
         frequencies[i] = frequency;
@@ -72,39 +79,8 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < notes; i++)
     {
-        printf("%lf\n", frequencies[i]);
+        /* TODO: print CSOUND commands to a text file. */
     }
 
     return 0;
 }
-
-/*
-    OUTPUSAMPLE:
-    Windows commandline: 4-Listing1.5.2 24 117
-        output:
-            220.000000
-            226.446492
-            233.081881
-            239.911701
-            246.941651
-            254.177593
-            261.625565
-            269.291780
-            277.182631
-            285.304702
-            293.664768
-            302.269802
-            311.126984
-            320.243700
-            329.627557
-            339.286382
-            349.228231
-            359.461400
-            369.994423
-            380.836087
-            391.995436
-            403.481779
-            415.304698
-            427.474054
-
-*/

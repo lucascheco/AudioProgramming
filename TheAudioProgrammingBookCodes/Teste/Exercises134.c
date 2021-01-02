@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: A test from "The Audio Programming Book", chapter 1, knowing errors.
-//Date: 14/05/2020.
+/*
+    Author: Lucas Pacheco.
+    Description: A test from "The Audio Programming Book", chapter 1, knowing errors.
+    Date: 14/05/2020.
+*/
 
 /*
 #include <stdio.h>
@@ -42,5 +44,5 @@ int main()
 
 ERROR:
     **No error**
-    **Sucessfully compiled**
+    **Successfully compiled**
 */

@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: A test exercise from "The Audio Programming Book", chapter 1, interactive version of the program fre2midi.
-//Date: 14/05/2020.
+/*
+    Author: Lucas Pacheco.
+    Description: A test exercise from "The Audio Programming Book", chapter 1, interactive version of the program fre2midi.
+    Date: 14/05/2020.
+*/
 
 #include <stdio.h>
 #include <math.h>
@@ -24,9 +26,10 @@ int main()
     /* MIDI Note 0 is C, 5 octaves below Middle C */
     c0 = c5 * pow(0.5, 5);
 
-    //ANSWER (a): User types a frequency
+    /* ANSWER (a): User types a frequency */
     printf("Frequency: ");
     scanf("%lf", &frequency);
+    
     /* find nearest MIDI note to a given frequency in Hz */ /* uses the log rule: log_a(N) = log_b(N) / log_b(a) to find the log of a value to base 'semitone_ratio'. */
     fracmidi = log(frequency / c0) / log(semitone_ratio);
     printf("FRACMIDI: %lf\n", fracmidi);

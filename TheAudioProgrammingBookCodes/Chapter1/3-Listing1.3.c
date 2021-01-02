@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: A copy from "The Audio Programming Book", chapter 1, Listing 1.3.
-//Date: 13/05/2020.
+/*
+    Author: Lucas Pacheco.
+    Description: A copy from "The Audio Programming Book", chapter 1, Listing 1.3.
+    Date: 13/05/2020.
+*/
 
 /* listing 1.3. Calculate frequency of a MIDI Note number */
 #include <stdio.h>

@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, printing one more frequency.
-//Date: 23/05/2020.
+/*
+    Author: Lucas Pacheco.
+    Description: Code  from "The Audio Programming Book", chapter 1, printing one more frequency.
+    Date: 23/05/2020.
+*/
 
 #include <stdio.h>
 #include <math.h>
@@ -55,15 +57,16 @@ int main(int argc, char *argv[])
     */
 
     /* calculate required numbers */
-    ratio = pow(2, 1.0 / (double)notes); /* approx. 1.0594631 */
+    ratio = pow(2.0, 1.0 / 12.0); /* approx. 1.0594631 */
 
     /* find Middle C, three semitones above low A = 220 */
-    c5 = 220.0 * pow(ratio, 3);
+    c5 = 220.0 * pow(ratio, 3.0);
 
     /* MIDI Note 0 is C, 5 octaves below Middle C */
-    c0 = c5 * pow(0.5, 5);
+    c0 = c5 * pow(0.5, 5.0);
 
-    frequency = c0 * pow(ratio, midinote);
+    frequency = c0 * pow(ratio, (double)midinote);
+
     for (int i = 0; i <= notes; i++)
     {
         frequencies[i] = frequency;
@@ -72,7 +75,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i <= notes; i++)
     {
-        printf("%d: %lf\n", i + 1, frequencies[i]);
+        printf("%2d: %lf\n", i + 1, frequencies[i]);
     }
 
     return 0;
@@ -81,31 +84,58 @@ int main(int argc, char *argv[])
 /*
     OUTPUSAMPLE:
     Windows commandline: Exercises154 24 117
-        output:
-            1: 220.000000                                                                                                                                                                      
-            2: 226.446492                                                                                                                                                                      
-            3: 233.081881                                                                                                                                                                      
-            4: 239.911701                                                                                                                                                                      
-            5: 246.941651                                                                                                                                                                      
-            6: 254.177593                                                                                                                                                                      
-            7: 261.625565                                                                                                                                                                      
-            8: 269.291780                                                                                                                                                                      
-            9: 277.182631                                                                                                                                                                      
-            10: 285.304702
-            11: 293.664768                                                                                                                                                                     
-            12: 302.269802                                                                                                                                                                     
-            13: 311.126984                                                                                                                                                                     
-            14: 320.243700                                                                                                                                                                     
-            15: 329.627557                                                                                                                                                                     
-            16: 339.286382                                                                                                                                                                     
-            17: 349.228231                                                                                                                                                                     
-            18: 359.461400                                                                                                                                                                     
-            19: 369.994423  
-            20: 380.836087                                                                                                                                                                     
-            21: 391.995436                                                                                                                                                                     
-            22: 403.481779                                                                                                                                                                     
-            23: 415.304698                                                                                                                                                                     
-            24: 427.474054                                                                                                                                                                     
-            25: 440.000000  
+        output1:
+             1: 7040.000000
+             2: 7458.620184
+             3: 7902.132820
+             4: 8372.018090
+             5: 8869.844191
+             6: 9397.272573
+             7: 9956.063479
+             8: 10548.081821
+             9: 11175.303406
+            10: 11839.821527
+            11: 12543.853951
+            12: 13289.750323
+            13: 14080.000000
+            14: 14917.240369
+            15: 15804.265640
+            16: 16744.036179
+            17: 17739.688383
+            18: 18794.545147
+            19: 19912.126958
+            20: 21096.163642
+            21: 22350.606812
+            22: 23679.643054
+            23: 25087.707903
+            24: 26579.500645
+            25: 28160.000000 
 
+        output2:
+             1: 220.000000
+             2: 233.081881
+             3: 246.941651
+             4: 261.625565
+             5: 277.182631
+             6: 293.664768
+             7: 311.126984
+             8: 329.627557
+             9: 349.228231
+            10: 369.994423
+            11: 391.995436
+            12: 415.304698
+            13: 440.000000
+            14: 466.163762
+            15: 493.883301
+            16: 523.251131
+            17: 554.365262
+            18: 587.329536
+            19: 622.253967
+            20: 659.255114
+            21: 698.456463
+            22: 739.988845
+            23: 783.990872
+            24: 830.609395
+            25: 880.000000
+            
 */

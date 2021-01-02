@@ -1,7 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, printing one more frequency.
-//Date: 23/05/2020.
-
+/*
+    Author: Lucas Pacheco.
+    Description: Code  from "The Audio Programming Book", chapter 1, printing one more frequency.
+    Date: 23/05/2020.
+*/
 // OBS: I don't totally got it this question.
 
 #include <stdio.h>
@@ -57,7 +58,7 @@ int main(int argc, char *argv[])
     */
 
     /* calculate required numbers */
-    ratio = pow(2, 1.0 / (double)notes); /* approx. 1.0594631 */
+    ratio = pow(2.0, 1.0 / 12.0); /* approx. 1.0594631 */
 
     /* find Middle C, three semitones above low A = 220 */
     c5 = 220.0 * pow(ratio, 3);
@@ -66,6 +67,9 @@ int main(int argc, char *argv[])
     c0 = c5 * pow(0.5, 5);
 
     frequency = c0 * pow(ratio, midinote);
+
+    ratio = pow(2.0, 1.0 / (double)notes);
+
     for (int i = 0; i <= notes; i++)
     {
         frequencies[i] = frequency;

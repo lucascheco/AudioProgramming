@@ -1,9 +1,10 @@
 /*
     Author: Lucas Pacheco.
-    Description: A test exercise from "The Audio Programming Book", chapter 1, changing loop types.
-    Date: 23/05/2020.
+    Description: Code  from "The Audio Programming Book", chapter 1, writing a program to create musical scales.
+    Date: 22/05/2020.
 */
 
+/* nscale  Display E.T(EqualTempered) frequencies for a N-note octave, from a given MIDI note */
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -14,11 +15,9 @@ int main(int argc, char *argv[])
     double frequency, ratio;
     double c0, c5;
     double frequencies[24];
-    
-    int i = 0;
 
     /*
-        ERROR HANDLE 
+        Erro handling. 
     */
     if (argc != 3)
     {
@@ -59,41 +58,37 @@ int main(int argc, char *argv[])
     */
 
     /* calculate required numbers */
-    ratio = pow(2, 1.0 / 12.0); /* approx. 1.0594631 */
+    ratio = pow(2.0, 1.0 / 12.0);  /* approx. 1.0594631 */
 
     /* find Middle C, three semitones above low A = 220 */
-    c5 = 220.0 * pow(ratio, 3);
+    c5 = 220.0 * pow(ratio, 3.0);
 
     /* MIDI Note 0 is C, 5 octaves below Middle C */
-    c0 = c5 * pow(0.5, 5);
+    c0 = c5 * pow(0.5, 5.0);
 
-    frequency = c0 * pow(ratio, midinote);
+    frequency = c0 * pow(ratio, (double)midinote);
 
+    /* Custom ratio -> User Input */
     ratio = pow(2.0, 1.0 / (double)notes);
-    
-    /* 1.5.2(A) */
-    while (i < notes)
+
+    for (int i = 0; i < notes; i++)
     {
         frequencies[i] = frequency;
         frequency *= ratio;
-        i++;
     }
 
-    /* 1.5.2(B) */
-    i = 0;
-    do
+    for (int i = 0; i < notes; i++)
     {
         printf("%lf\n", frequencies[i]);
-        i++;
-    } while (i < notes);
+    }
 
     return 0;
 }
 
 /*
     OUTPUSAMPLE:
-    Windows commandline: Exercises152 24 117
-        output:
+    Windows commandline: 4-Listing1.5.3 24 117
+        output1:
             7040.000000
             7246.287746
             7458.620184
@@ -119,4 +114,18 @@ int main(int argc, char *argv[])
             13289.750323
             13679.169731
 
+        output2:
+            146.832384
+            155.563492
+            164.813778
+            174.614116
+            184.997211
+            195.997718
+            207.652349
+            220.000000
+            233.081881
+            246.941651
+            261.625565
+            277.182631
+        
 */
