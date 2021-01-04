@@ -401,7 +401,6 @@ BREAKPOINT *scale_by_factor(FILE *fp, BREAKPOINT *points, unsigned long scaleFac
         { 
             fprintf(fp, "%lf %lf\n", points[i - 1].time  + auxTime  * (double)k, points[i - 1].value + auxValue * (double)k);
         }
-        
     }
 
     fprintf(fp, "%lf %lf\n", points[size - 1].time, points[size - 1].value);
@@ -439,9 +438,7 @@ int delete_point(FILE *fp, BREAKPOINT *points, BREAKPOINT p)
     fputs("Deleted point\n", fp);
     for (int i = 0; i < size; i++)
     {   
-        /*
-            When we find the breakpoint, we do not print it.
-        */
+        /* When we find the breakpoint, we do not print it. */
         if (points[i].time == p.time && points[i].value == p.value)    
             continue;
 

@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Test exercise from "The Audio Programming Book", chapter 1, Exercises 1.8.1 .
-//Date: 20/06/2020.
+/***********************************************************************************************
+    Author: Lucas Pacheco.
+    Description: Test exercise from "The Audio Programming Book", chapter 1, Exercises 1.8.1 .
+    Date: 20/06/2020.
+************************************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,7 +24,7 @@ static inline void calculateEnvelope(int samplePoints, FILE *fp)
     for (int i = 0; i < samplePoints; i++)
     {
         fprintf(fp, "%lf %lf\n", (double)i, currentLevel);
-        currentLevel *= currentLevel + coeff;
+        currentLevel += currentLevel * coeff;
     }
 }
 /* I do not understand this code */
@@ -31,11 +33,10 @@ int main()
     FILE *fp;
 
     fp = fopen("Env.txt", "w");
-    init(1.0, 0.0001, 0.43);
+    init(1.0, 0.0001, 4.0);
     printf("%.10lf\n", coeff);
-    calculateEnvelope(2000, fp);
-
-
+    calculateEnvelope(10, fp);
+    
     fclose(fp);
     return 0;
 }

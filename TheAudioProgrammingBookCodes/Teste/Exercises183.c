@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Test exercise from "The Audio Programming Book", chapter 1, Exercises 1.8.3 .
-//Date: 20/06/2020.
+/**********************************************************************************************
+    Author: Lucas Pacheco.
+    Description: Test exercise from "The Audio Programming Book", chapter 1, Exercises 1.8.3 .
+    Date: 20/06/2020.
+***********************************************************************************************/
 
 /*
  (a)

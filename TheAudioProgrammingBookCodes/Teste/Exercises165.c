@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Test exercise from "The Audio Programming Book", exercise 1.6.5 .
-//Date: 07/06/2020.
+/************************************************************************************
+    Author: Lucas Pacheco.
+    Description: Test exercise from "The Audio Programming Book", exercise 1.6.5 .
+    Date: 07/06/2020.
+*************************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -175,10 +177,8 @@ int main(int argc, char *argv[])
     /* finally, read array, write to screen, and optionally to file */
 
     if (fp)
-    {
-        if (append)
+       if (append)
             err = fprintf(fp, "%s\n", fullcommand);
-    }
 
     for (i = 0; i <= notes; i++)
     {

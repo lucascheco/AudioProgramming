@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Test exercise from "The Audio Programming Book", chapter 1, Exercises 1.7.2 .
-//Date: 11/06/2020.
+/***********************************************************************************************
+    Author: Lucas Pacheco.
+    Description: Test exercise from "The Audio Programming Book", chapter 1, Exercises 1.7.2 .
+    Date: 11/06/2020.
+************************************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -156,7 +158,7 @@ BREAKPOINT maxpoint(const BREAKPOINT *points, unsigned long npoints)
     point.time = points[0].time;
     point.value = points[0].value;
 
-    for (i = 0; i < npoints; i++)
+    for (i = 1; i < npoints; i++)
     {
         if (points[i].value > point.value)
         {

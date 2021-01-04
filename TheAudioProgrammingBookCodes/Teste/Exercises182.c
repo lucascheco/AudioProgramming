@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Test exercise from "The Audio Programming Book", chapter 1, Exercises 1.8.2 .
-//Date: 20/06/2020.
+/**********************************************************************************************
+    Author: Lucas Pacheco.
+    Description: Test exercise from "The Audio Programming Book", chapter 1, Exercises 1.8.2 .
+    Date: 20/06/2020.
+***********************************************************************************************/
 
 /* Not exponential Envelope */
 #include <stdio.h>
@@ -58,17 +60,13 @@ int main(int argc, char **argv)
     stepY = level / points;
     
     for (int i = 0; i <= points; i++)
-    {
         fprintf(fp, "%lf %lf\n", stepX * (double)i, stepY * (double)i);
-    }
 
     stepX = decay_Duration / points;
     stepY = level / points;
 
     for (int i = points, j = 0; i >= 0; i--, j++)
-    {
         fprintf(fp, "%lf %lf\n", stepX * (double)j + attack_Duration, stepY * (double)i);
-    }
 
     fclose(fp);
     return 0;

@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Test exercise from "The Audio Programming Book", exercise 1.6.3 .
-//Date: 07/06/2020.
+/**********************************************************************************
+    Author: Lucas Pacheco.
+    Description: Test exercise from "The Audio Programming Book", exercise 1.6.3 .
+    Date: 07/06/2020.
+***********************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -148,11 +150,11 @@ int main(int argc, char *argv[])
 
     for (i = 0; i <= notes; i++)
     {
-        // Exercise 1.6.3
-        ////////////////////////////////////
+        /* Exercise 1.6.3 */
+        /*////////////////////////////////*/
         /**/ double r = pow(ratio, i); /**/
         /**/ double x = intervals[i];  /**/
-        //////////////////////////////////
+        /*///////////////////////////////*/
         if (write_interval)
             printf("%d: \t%f\t%f\n", i, r, x);
         else

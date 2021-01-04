@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Test exercise from "The Audio Programming Book", chapter 1, Exercises 1.7.1 .
-//Date: 11/06/2020.
+/***********************************************************************************************
+    Author: Lucas Pacheco.
+    Description: Test exercise from "The Audio Programming Book", chapter 1, Exercises 1.7.1 .
+    Date: 11/06/2020.
+************************************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
