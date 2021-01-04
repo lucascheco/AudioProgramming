@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, Listing1.6.10 .
-//Date: 01/06/2020.
+/*************************************************************************************
+    Author: Lucas Pacheco.
+    Description: Code  from "The Audio Programming Book", chapter 1, Listing1.6.10 .
+    Date: 01/06/2020.
+**************************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,6 +14,8 @@
     -i : prints the calculated interval as well as the abs freq  
     outfile: optional text filename for output data
 */
+/* To use optional flags, we assume this flags are before the required ones. */
+/* We are not passing values, just flags, thus the program has multiples paths. */
 
 int main(int argc, char *argv[])
 {
@@ -33,6 +37,7 @@ int main(int argc, char *argv[])
 
             else if (argv[1][1] == 'i')
                 write_interval = 1;
+
             else
             {
                 printf("error: unrecognized option %s\n", argv[1]);
@@ -136,7 +141,7 @@ int main(int argc, char *argv[])
         basefreq = startval;
 
     /* calc ratio from notes and fill the array */
-    ratio = pow(2.0, 1.0 / notes);
+    ratio = pow(2.0, 1.0 / (double)notes);
 
     for (i = 0; i <= notes; i++)
     {
@@ -173,3 +178,63 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+/*
+    OUTPUTSAMPLE:
+        input: 
+            ./5-Listing1.6.10 -m -i 12 57
+        output: 
+            0:      1.000000        220.000000
+            1:      1.059463        233.081881
+            2:      1.122462        246.941651
+            3:      1.189207        261.625565
+            4:      1.259921        277.182631
+            5:      1.334840        293.664768
+            6:      1.414214        311.126984
+            7:      1.498307        329.627557
+            8:      1.587401        349.228231
+            9:      1.681793        369.994423
+            10:     1.781797        391.995436
+            11:     1.887749        415.304698
+            12:     2.000000        440.000000
+*/
+
+/*
+    OUTPUTSAMPLE:
+        input: 
+            ./5-Listing1.6.10 -i 12 220
+        output: 
+            0:      1.000000        220.000000
+            1:      1.059463        233.081881
+            2:      1.122462        246.941651
+            3:      1.189207        261.625565
+            4:      1.259921        277.182631
+            5:      1.334840        293.664768
+            6:      1.414214        311.126984
+            7:      1.498307        329.627557
+            8:      1.587401        349.228231
+            9:      1.681793        369.994423
+            10:     1.781797        391.995436
+            11:     1.887749        415.304698
+            12:     2.000000        440.000000
+*/
+
+/*
+    OUTPUTSAMPLE:
+        input: 
+            ./5-Listing1.6.10 -i 12 57
+        output: 
+            0:      1.000000        57.000000
+            1:      1.059463        60.389396
+            2:      1.122462        63.980337
+            3:      1.189207        67.784806
+            4:      1.259921        71.815500
+            5:      1.334840        76.085872
+            6:      1.414214        80.610173
+            7:      1.498307        85.403503
+            8:      1.587401        90.481860
+            9:      1.681793        95.862191
+            10:     1.781797        101.562454
+            11:     1.887749        107.601672
+            12:     2.000000        114.000000
+*/

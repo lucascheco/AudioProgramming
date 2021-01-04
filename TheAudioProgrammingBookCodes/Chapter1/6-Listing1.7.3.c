@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, Listing1.7.3 .
-//Date: 10/06/2020.
+/***********************************************************************************
+    Author: Lucas Pacheco.
+    Description: Code  from "The Audio Programming Book", chapter 1, Listing1.7.3 .
+    Date: 10/06/2020.
+************************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,7 +16,7 @@ typedef struct breakpoint
     VALUE value;
 } BREAKPOINT;
 
-BREAKPOINT *get_breakpoints(FILE *fp, long *psize)
+BREAKPOINT* get_breakpoints(FILE *fp, long *psize)
 {
     int got;
     long npoints = 0, size = 64;

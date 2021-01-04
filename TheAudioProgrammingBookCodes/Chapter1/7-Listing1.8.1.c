@@ -1,9 +1,12 @@
-//Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, Listing1.8.1 .
-//Date: 08/07/2020.
+/***********************************************************************************
+    Author: Lucas Pacheco.
+    Description: Code  from "The Audio Programming Book", chapter 1, Listing1.8.1 .
+    Date: 08/07/2020.
+************************************************************************************/
 
 /* expdecay.c */
 /* implement formula x[t] = a * exp(-k/T) */
+/* This also outputs to a text file. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -16,7 +19,7 @@ int main(int argc, char **argv)
     FILE   *fp;
 
     fp = fopen("expdecay.txt", "w");
-
+    /* Basically dur = duration of the decay, T shallowness*/
     if (argc != 5)
     {
         printf("usage: expdecay dur T steps expdecay.txt\n");

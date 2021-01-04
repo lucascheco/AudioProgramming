@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, Listing1.9.1 .
-//Date: 21/07/2020.
+/***********************************************************************************
+    Author: Lucas Pacheco.
+    Description: Code  from "The Audio Programming Book", chapter 1, Listing1.9.1 .
+    Date: 21/07/2020.
+************************************************************************************/
 
 /* sinetext.c */
 /* write sinewave as a text */

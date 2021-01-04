@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, Listing1.7.1 .
-//Date: 09/06/2020.
+/***********************************************************************************
+    Author: Lucas Pacheco.
+    Description: Code  from "The Audio Programming Book", chapter 1, Listing1.7.1 .
+    Date: 09/06/2020.
+************************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>

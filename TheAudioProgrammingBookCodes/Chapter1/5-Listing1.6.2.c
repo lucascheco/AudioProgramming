@@ -16,7 +16,7 @@ int main()
 
     do
     {
-        float sample = *samp++;
+        float sample = *samp++; /* Pointer is incremented not the value, but dereference occurs first(sample = *samp) and than samp++. */
         output = sample - input + (gain * output);
         input = sample;
         *ar++ = output;

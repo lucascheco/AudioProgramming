@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, Listing1.8.2 .
-//Date: 09/07/2020.
+/************************************************************************************
+    Author: Lucas Pacheco.
+    Description: Code  from "The Audio Programming Book", chapter 1, Listing1.8.2 .
+    Date: 09/07/2020.
+*************************************************************************************/
 
 /* expbrk.c generate exponential attack or decay breakpoint data */
 #include <stdio.h>
@@ -43,7 +45,7 @@ int main(int argc, char **argv)
     step = dur / npoints;
 
     startval = atof(argv[3]);
-    endval = atof(argv[4]);
+    endval   = atof(argv[4]);
     valrange = endval - startval;
     
     if (valrange == 0.0)
@@ -52,14 +54,14 @@ int main(int argc, char **argv)
     }
 
     /* initialize normalized exponential as attack or decay */
-    if (startval > endval)
+    if (startval > endval) /* if an attack */
     {
         start = 1.0;
         end = verysmall;
         valrange = -valrange;
         offset = endval;
     }
-    else
+    else /* if a release */
     {
         start = verysmall;
         end = 1.0;
@@ -67,6 +69,7 @@ int main(int argc, char **argv)
     }
     
     thisstep = 0.0;
+
     /* make normalized curve, scale output to input values, range */
     fac = pow(end / start, 1.0 / npoints);
 
