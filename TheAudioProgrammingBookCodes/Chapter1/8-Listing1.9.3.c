@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, Listing1.9.3 .
-//Date: 22/07/2020.
+/***********************************************************************************
+    Author: Lucas Pacheco.
+    Description: Code  from "The Audio Programming Book", chapter 1, Listing1.9.3 .
+    Date: 22/07/2020.
+************************************************************************************/
 
 /* tfork.c virtual tuning fork combining sinetext.c and expdecay.c */
 #include <stdio.h>
@@ -53,6 +55,7 @@ int main(int argc, char **argv)
         /* apply exp decay */
         x    *= a;
         samp *= x;
+        
         if (0 > fprintf(fp, "%.8lf\n", samp))
         {
             fprintf(stderr, "error: unable to print on stdout stream\n");

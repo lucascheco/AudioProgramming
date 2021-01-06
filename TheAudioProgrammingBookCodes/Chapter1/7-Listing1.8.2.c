@@ -54,17 +54,17 @@ int main(int argc, char **argv)
     }
 
     /* initialize normalized exponential as attack or decay */
-    if (startval > endval) /* if an attack */
+    if (startval > endval) /* if a release */
     {
-        start = 1.0;
-        end = verysmall;
+        start    = 1.0;
+        end      = verysmall;
         valrange = -valrange;
-        offset = endval;
+        offset   = endval;
     }
-    else /* if a release */
+    else /* if a attack */
     {
-        start = verysmall;
-        end = 1.0;
+        start  = verysmall;
+        end    = 1.0;
         offset = startval;
     }
     
@@ -76,14 +76,15 @@ int main(int argc, char **argv)
     for (i = 0; i < npoints; i++)
     {
         fprintf(stdout, "%.4lf\t%.8lf\n", thisstep, offset + (start * valrange));
-        fprintf(fp, "%.4lf\t%.8lf\n", thisstep, offset + (start * valrange));
+        fprintf(fp,     "%.4lf\t%.8lf\n", thisstep, offset + (start * valrange));
+
         start *= fac;
         thisstep += step;
     }
 
     /* print final value */
     fprintf(stdout, "%.4lf\t%.8lf\n", thisstep, offset + (start * valrange));
-    fprintf(fp, "%.4lf\t%.8lf\n", thisstep, offset + (start * valrange));
+    fprintf(fp,     "%.4lf\t%.8lf\n", thisstep, offset + (start * valrange));
 
     fprintf(stderr, "done\n");
 

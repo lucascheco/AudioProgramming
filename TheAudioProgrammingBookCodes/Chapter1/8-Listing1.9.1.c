@@ -31,6 +31,7 @@ int main(int argc, char **argv)
     for (i = 0; i < nsamps; i++)
     {
         samp = sin(angleincr * i);
+        
         if (0 > fprintf(stdout, "%.21lf\n", samp))
         {
             fprintf(stderr, "error: unable to print on stdout stream\n");

@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, Listing1.9.4 .
-//Date: 22/07/2020.
+/***********************************************************************************
+    Author: Lucas Pacheco.
+    Description: Code  from "The Audio Programming Book", chapter 1, Listing1.9.4 .
+    Date: 22/07/2020.
+************************************************************************************/
 
 /* tfork2.c alternate tuning fork generator based on expbrk.c 
 * - decay is always to ~silencer regardless of duration. */
@@ -20,8 +22,8 @@ int main(int argc, char **argv)
     int    i, sr, nsamps;
     double samp, dur, freq, srate, k, amp, maxamp;
     double start, end, fac, angleincr;
-    double twopi   = 2.0 * M_PI;
-    FILE   *fp     = NULL;
+    double twopi = 2.0 * M_PI;
+    FILE   *fp   = NULL;
 
     if (argc != ARG_NARGS)
     {
@@ -35,10 +37,10 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    dur    = atof(argv[ARG_DUR]);
-    freq   = atof(argv[ARG_HZ]);
-    srate  = atof(argv[ARG_SR]);
-    amp    = atof(argv[ARG_AMP]);
+    dur   = atof(argv[ARG_DUR]);
+    freq  = atof(argv[ARG_HZ]);
+    srate = atof(argv[ARG_SR]);
+    amp   = atof(argv[ARG_AMP]);
 
     nsamps    = (int)(dur * srate);
     angleincr = twopi * freq / srate;

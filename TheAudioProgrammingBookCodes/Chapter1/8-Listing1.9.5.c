@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: Code  from "The Audio Programming Book", chapter 1, Listing1.9.5 .
-//Date: 23/07/2020.
+/***********************************************************************************
+    Author: Lucas Pacheco.
+    Description: Code  from "The Audio Programming Book", chapter 1, Listing1.9.5 .
+    Date: 23/07/2020.
+************************************************************************************/
 
 /* tforkraw.c gen raw sfile with native endiannes */
 /* based on tfork2.c */
@@ -17,10 +19,9 @@ enum samptype {RAWSAMP_SHORT, RAWSAMP_FLOAT};
 
 /* thanks to the SNDAN for this */
 /* return 0 for big-endian machine, 1 for little-endian machine */
-
 int byte_order()
 {
-    int one = 1;
+    int   one = 1;
     char *endptr = (char *)&one;
 
     return (*endptr);
@@ -30,16 +31,16 @@ const char *endinness[2] = {"big_endian", "little_endian"};
 
 int main(int argc, char **argv)
 {
-    unsigned int i, nsamps;                         // Contador(i) ** Número de Samples(nsamps)
-    unsigned int maxframe = 0;                      //
-    unsigned int samptype, endian, bitreverse;      // On the if statement(samptype) ** To receive the return of byteOrder function(endian) ** (bitreverse)
-    double       samp, dur, freq, srate, amp, step; // Handle samples values(samp) ** To take duration argument(dur) ** To take frequency argument(freq) ** To take sample rate argument(srate) ** To take amp argument(amp) ** (step)
-    double       start, end, fac, maxsamp;          //
-    double       twopi = 2.0 * M_PI;                // To calculate 2PI
-    double       angleincr;                         //  
-    FILE        *fp = NULL;                         //
-    float        fsamp;                             //
-    short        ssamp;                             //
+    unsigned int i, nsamps;                         /* Contador(i) ** Número de Samples(nsamps) */
+    unsigned int maxframe = 0;                      
+    unsigned int samptype, endian, bitreverse;      /* On the if statement(samptype) ** To receive the return of byteOrder function(endian) ** (bitreverse) */
+    double       samp, dur, freq, srate, amp, step; /* Handle samples values(samp) ** To take duration argument(dur) ** To take frequency argument(freq) ** To take sample rate argument(srate) ** To take amp argument(amp) ** (step) */
+    double       start, end, fac, maxsamp;          
+    double       twopi = 2.0 * M_PI;                /* To calculate 2PI */
+    double       angleincr;
+    FILE        *fp = NULL;
+    float        fsamp;
+    short        ssamp;
 
     if (argc != ARG_NARGS)
     {
@@ -68,16 +69,16 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    nsamps = (int)(dur * srate);
-    angleincr = twopi * freq / nsamps;
-    step = dur / nsamps;
+    nsamps    = (int)(dur * srate);
+    angleincr = twopi * freq / srate;
+    step      = dur / nsamps;
 
     /* normalized range always - just scale by amp */
-    start = 1.0;
-    end = 1.0e-4;
+    start   = 1.0;
+    end     = 1.0e-4;
     maxsamp = 0.0;
-    fac = pow(end / start, 1.0 / nsamps);
-    endian = byte_order();
+    fac     = pow(end / start, 1.0 / nsamps);
+    endian  = byte_order();
 
     if (0 > printf("Writing %d %s samples\n", nsamps, endinness[endian]))
     {
@@ -90,8 +91,8 @@ int main(int argc, char **argv)
     {
         for (i = 0; i < nsamps; i++)
         {
-            samp = amp * sin(angleincr * i);
-            samp *= start;
+            samp   = amp * sin(angleincr * i);
+            samp  *= start;
             start *= fac;
             
             /* use 32767 to avoid overflow problem */
@@ -114,10 +115,11 @@ int main(int argc, char **argv)
     {
         for (i = 0; i < nsamps; i++)
         {
-            samp = amp * sin(angleincr * i);
-            samp *= start;
+            samp   = amp * sin(angleincr * i);
+            samp  *= start;
             start *= fac;
-            fsamp = (float)samp;
+            
+            fsamp  = (float)samp;
 
             if (fwrite(&fsamp, sizeof(float), 1, fp) != 1)
             {
@@ -127,7 +129,7 @@ int main(int argc, char **argv)
 
             if (fabs(samp) > maxsamp)
             {
-                maxsamp = fabs(samp);
+                maxsamp  = fabs(samp);
                 maxframe = i;
             }
         }        
