@@ -1,8 +1,8 @@
-/*
+/*********************************************************************************
     Author:      Lucas Pacheco.
     Description: Test exercise from "The Audio Programming Book", Exercise1.9.7 .
     Date:        02/08/2020
-*/
+**********************************************************************************/
 
 /* modifing sinetext.c to 16bit*/
 /* write sinewave as a text */

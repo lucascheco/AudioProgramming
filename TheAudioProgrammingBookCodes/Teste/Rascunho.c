@@ -1,6 +1,8 @@
-//Author: Lucas Pacheco.
-//Description: A program for testing, this code always will be changed.
-//Date: 26/05/2020.
+/*************************************************************************
+    Author: Lucas Pacheco.
+    Description: A program for testing, this code always will be changed.
+    Date: 26/05/2020.
+**************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>

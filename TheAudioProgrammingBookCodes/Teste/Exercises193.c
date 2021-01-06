@@ -1,8 +1,9 @@
-/*
+/*********************************************************************************
     Author:      Lucas Pacheco.
     Description: Test exercise from "The Audio Programming Book", Exercise1.9.3 .
     Date:        02/08/2020
-*/
+**********************************************************************************/
+
 /* tforkraw.c gen raw sfile with native endiannes */
 /* based on tfork2.c */
 #include <stdio.h>
@@ -31,19 +32,20 @@ const char *endinness[2] = {"big_endian", "little_endian"};
 
 int main(int argc, char **argv)
 {
-    unsigned int i, nsamps;                         // Contador(i) ** Número de Samples(nsamps)
-    unsigned int maxframe = 0;                      //
-    unsigned int samptype, endian, bitreverse;      // On the if statement(samptype) ** To receive the return of byteOrder function(endian) ** (bitreverse)
-    double       samp, dur, freq, srate, amp, step; // Handle samples values(samp) ** To take duration argument(dur) ** To take frequency argument(freq) ** To take sample rate argument(srate) ** To take amp argument(amp) ** (step)
-    double       start, end, fac, maxsamp;          //
-    double       twopi = 2.0 * M_PI;                // To calculate 2PI
-    double       angleincr;                         // Space between 2 points
-    FILE        *fp = NULL;                         //
-    float        fsamp;                             //
+    unsigned int i, nsamps;                         /* Contador(i) ** Número de Samples(nsamps) */
+    unsigned int maxframe = 0;                      
+    unsigned int samptype, endian, bitreverse;      /* On the if statement(samptype) ** To receive the return of byteOrder function(endian) ** (bitreverse) */
+    double       samp, dur, freq, srate, amp, step; /* Handle samples values(samp) ** To take duration argument(dur) ** To take frequency argument(freq) ** To take sample rate argument(srate) ** To take amp argument(amp) ** (step) */
+    double       start, end, fac, maxsamp;          
+    double       twopi = 2.0 * M_PI;                /* To calculate 2PI */
+    double       angleincr;                         /* Space between 2 points */
+    FILE        *fp = NULL;                         
+    float        fsamp;                             
     short        ssamp;  
+    
     /* To calculate freq from MIDI values */
     int          midi;    
-    const double ratio  = pow(2, 1.0 / 12.0); // Keyboard with 12 notes.
+    const double ratio  = pow(2, 1.0 / 12.0);
     double       c0, c5;                           
 
     if (argc != ARG_NARGS)
@@ -60,7 +62,7 @@ int main(int argc, char **argv)
 
     if (midi < 0)
     {
-        fprintf(stderr, "Error: cannot have negative MIDI notes!\n");
+        fprintf(stderr, "Error: Minimum MIDInote is 0\n");
         return 1;
     }
 
@@ -76,8 +78,8 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    c5 = 220.0 * pow(ratio, 3);
-    c0 = c5 * pow(0.5, 5);
+    c5 = 220.0 * pow(ratio, 3.0);
+    c0 = c5 * pow(0.5, 5.0);
     freq = c0 * pow(ratio, midi);
     fprintf(stdout, "Frequency of MIDI %d is %.4lf\n", midi, freq);
     
@@ -91,7 +93,7 @@ int main(int argc, char **argv)
     }
 
     nsamps = (int)(dur * srate);
-    angleincr = twopi * freq / nsamps;
+    angleincr = twopi * freq / srate;
     step = dur / nsamps;
 
     /* normalized range always - just scale by amp */

@@ -1,8 +1,9 @@
-/*
+/*********************************************************************************
     Author:      Lucas Pacheco.
     Description: Test exercise from "The Audio Programming Book", Exercise1.9.5 .
     Date:        02/08/2020
-*/
+**********************************************************************************/
+
 /*
     It's looks like the wave is phase shifted.
 */

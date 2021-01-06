@@ -1,8 +1,8 @@
-/*
+/*********************************************************************************
     Author:      Lucas Pacheco.
     Description: Test exercise from "The Audio Programming Book", Exercise1.9.4 .
     Date:        02/08/2020
-*/
+**********************************************************************************/
 
 /* tforkraw.c gen raw sfile with native endiannes */
 /* based on tfork2.c */
@@ -32,16 +32,16 @@ const char *endinness[2] = {"big_endian", "little_endian"};
 
 int main(int argc, char **argv)
 {
-    unsigned int i, nsamps;                         // Contador(i) ** Número de Samples(nsamps)
-    unsigned int maxframe = 0;                      //
-    unsigned int samptype, endian, bitreverse;      // On the if statement(samptype) ** To receive the return of byteOrder function(endian) ** (bitreverse)
-    double       samp, dur, freq, srate, amp, step; // Handle samples values(samp) ** To take duration argument(dur) ** To take frequency argument(freq) ** To take sample rate argument(srate) ** To take amp argument(amp) ** (step)
-    double       start, end, fac, maxsamp;          //
-    double       twopi = 2.0 * M_PI;                // To calculate 2PI
-    double       angleincr;                         //  
-    FILE        *fp = NULL;                         //
-    float        fsamp;                             //
-    short        ssamp;                             //
+    unsigned int i, nsamps;                         /* Contador(i) ** Número de Samples(nsamps) */
+    unsigned int maxframe = 0;                      
+    unsigned int samptype, endian, bitreverse;      /* On the if statement(samptype) ** To receive the return of byteOrder function(endian) ** (bitreverse) */
+    double       samp, dur, freq, srate, amp, step; /* Handle samples values(samp) ** To take duration argument(dur) ** To take frequency argument(freq) ** To take sample rate argument(srate) ** To take amp argument(amp) ** (step) */
+    double       start, end, fac, maxsamp;          
+    double       twopi = 2.0 * M_PI;                /* To calculate 2PI */
+    double       angleincr;                     
+    FILE        *fp = NULL;                         
+    float        fsamp;                             
+    short        ssamp;                             
 
     if (argc != ARG_NARGS)
     {
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
     }
 
     nsamps = (int)(dur * srate);
-    angleincr = twopi * freq / nsamps;
+    angleincr = twopi * freq / srate;
     step = dur / nsamps;
 
     /* normalized range always - just scale by amp */
