@@ -1,8 +1,8 @@
-/*
+/***********************************************************************************
     Author:      Lucas Pacheco.
     Description: Code  from "The Audio Programming Book", chapter 2, Listing2.1.3 .
     Date:        07/08/2020
-*/
+************************************************************************************/
 
 /* sf2float.c: convert soundfile to floats */
 #include <stdio.h>
@@ -19,7 +19,7 @@ enum
 
 int main(int argc, char *argv[])
 {
-    PSF_PROPS props;
+    PSF_PROPS props; /* To collect all data of the input file */
     long framesread, totalread;
 
     /* init all resource vars to default states */
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     }
 
     /* be good, and startup portsf */
-    if (psf_init())
+    if (psf_init()) /* Return 0 for success */
     {
         printf("unable to start portsf\n");
         return 1;
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
         error++;
     }
     else
-        printf("Done. %d sample frames copied to %s\n", totalread, argv[ARG_OUTFILE]);
+        printf("Done. %ld sample frames copied to %s\n", totalread, argv[ARG_OUTFILE]);
 
     /* report PEAK values to user */
     if (psf_sndReadPeaks(ofd, peaks, NULL) > 0)
@@ -155,13 +155,12 @@ int main(int argc, char *argv[])
         for (i = 0; i < props.chans; i++)
         {
             peaktime = (double)peaks[i].pos / props.srate;
-            printf("CH %d:\t%.4f at %.4f secs\n", i + 1, peaks[i].val, peaktime);
+            printf("CH %ld:\t%.4f at %.4f secs\n", i + 1, peaks[i].val, peaktime);
         }
     }
 
 /* do all cleanup */
 exit:
-
     if (ifd >= 0)
         psf_sndClose(ifd);
 
