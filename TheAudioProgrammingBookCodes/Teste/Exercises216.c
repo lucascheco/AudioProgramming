@@ -255,7 +255,7 @@ int main(int argc, char *argv[])
 
         for (i = 0; i < props.chans; i++)
         {
-/*answer*/  float decibel = log(peaks[i].val) * 20.0f;
+/*answer*/  float decibel = log10(peaks[i].val) * 20.0f;
             peaktime = (double)peaks[i].pos / props.srate;
  
             printf("CH %ld:\t%.4fdB or %.4f AmpRaw at %.4f secs\n", i + 1, decibel, peaks[i].val, peaktime);
