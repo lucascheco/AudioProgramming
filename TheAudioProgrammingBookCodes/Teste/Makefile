@@ -3,7 +3,7 @@
 
 ################################
 #Just modify the exercise number
-EXERCIS = 215#
+EXERCIS = 222#
 ################################
 
 # Folders Flags
@@ -28,4 +28,9 @@ run:
 
 clean:
 	rm ./*.o
+	clear
+
+cleanAll:
+	rm ./*.o
+	rm ex
 	clear

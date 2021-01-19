@@ -1,8 +1,8 @@
-/***********************************************************************************
+/**************************************************************************************
     Author:      Lucas Pacheco.
-    Description: Test exercise from "The Audio Programming Book", Exercise2.1.6 .
-    Date:        14/01/2021
-************************************************************************************/
+    Description: Test exercise from "The Audio Programming Book", Exercise2.2.2 sfgain.
+    Date:        18/01/2021
+***************************************************************************************/
 
 
 #include <stdio.h>
@@ -18,11 +18,15 @@ enum
     ARG_BUFFERSIZE, 
     ARG_LIMIT,
     ARG_N, /* Number of repetitions, to make a loop */
+    ARG_AMPFAC,
     ARG_NARGS
 };
 
 int main(int argc, char *argv[])
 {
+/************/
+/**STAGE 1**/
+/**********/
     PSF_PROPS props;
     long framesread, totalread, globalsize = 0;
 
@@ -41,14 +45,34 @@ int main(int argc, char *argv[])
     
     int repetitions = atoi(argv[ARG_N]), n = 0;
 
-/* (1) */
-    printf("SF2FLOAT: convert soundfile to floats format\n");
+    int i;
+    float ampfac;
+
+/************/
+/**STAGE 2**/ /************/
+/**********/  /**STAGE 3**/
+              /**********/
+    printf("SFGAIN: change level of soundfiIe\n");
+    /* 
+        we could make optional flags but for now just
+            set buffer = 1
+                limit  = 0
+                N      = 1 or 0
+        to only apply the ampfactor.
+     */
+
     /* Argument checking */
     if (argc < ARG_NARGS)
     {
         printf("insufficient arguments.\n"
-               "usage:\n\tsf2float infile outfile buffer_size Limit N\n");
+               "usage:\n\tsfgain infile outfile buffer_size Limit N ampfactor\n");
 
+        return 1;
+    }
+    ampfac = (float)atof(argv[ARG_AMPFAC]);
+    if (ampfac == 1.0)
+    {
+        printf("Sound will not change, try another value.\n");
         return 1;
     }
 
@@ -73,7 +97,7 @@ int main(int argc, char *argv[])
     soundsize = psf_sndSize(ifd);
     /* bounderies checking of limit */
     /* Limit must be greater than buffer_size also */
-    if (limit > soundsize && limit < buffer_size)
+    if (limit > soundsize || limit < buffer_size)
     {
         printf("Limit must be less than or equal to the length of the file.\n");
 
@@ -81,14 +105,15 @@ int main(int argc, char *argv[])
         limit = soundsize;
     }
 
-    /* we now have a resource, so we use goto hereafter on hitting any error */
-    /* tell user if source file is already floats */
-    if (props.samptype == PSF_SAMP_IEEE_FLOAT)
-    {
-        printf("Info: infile is already in floats format.\n");
-    }
+    /* Take ampfactor argument */
 
-    props.samptype = PSF_SAMP_IEEE_FLOAT;
+
+    if (ampfac <= 0.0)
+    {
+        printf("Warning: ampfactor must be positive. \n:->: %s <= 0\n", argv[ARG_AMPFAC]);
+
+        return 1;
+    }
 
     /* check outfile and infile extension is one we know about */
     outformat = psf_getFormatExt(argv[ARG_OUTFILE]);
@@ -138,7 +163,8 @@ int main(int argc, char *argv[])
         error++;
         goto exit;
     }
-/* Solution */
+
+
     printf("infile format: ");
     switch (informat)
     {
@@ -180,7 +206,7 @@ int main(int argc, char *argv[])
             printf("Unknown\n");
     }
 
-/* (2) */
+
     printf("copying...\n");
 
     /* multi-frame loop to do copy, report any errors */
@@ -189,12 +215,23 @@ int main(int argc, char *argv[])
     /* we force limit to be greater than buffer_size and now we can do this step */
 
     totalread = 0; /* running count of sample frames */
+
+/************/
+/**STAGE 4**/
+/**********/
     do
     {
         while (framesread == buffer_size)
         {
             totalread += buffer_size;
-            
+
+            /* ampfac applied on each sample */
+            for (i = 0; i < props.chans*buffer_size; i++)
+            {
+                frame[i] *= ampfac;
+            }
+
+
             /* Loading Screen */
             printf("%3.1lf%%...\r", (totalread * 100) / (double)limit);
 
@@ -236,7 +273,9 @@ int main(int argc, char *argv[])
         framesread = psf_sndReadFloatFrames(ifd, frame, buffer_size);
 
     } while (++n < repetitions);
-    
+/************/
+/**STAGE 5**/
+/**********/
     if (framesread < 0)
     {
         printf("Error reading infile. Outfile is incoplete.\n");
@@ -255,14 +294,16 @@ int main(int argc, char *argv[])
 
         for (i = 0; i < props.chans; i++)
         {
-/*answer*/  float decibel = log(peaks[i].val) * 20.0f;
+            float decibel = log(peaks[i].val) * 20.0f;
             peaktime = (double)peaks[i].pos / props.srate;
  
             printf("CH %ld:\t%.4fdB or %.4f AmpRaw at %.4f secs\n", i + 1, decibel, peaks[i].val, peaktime);
         }
     }
 
-/* (3) */
+/************/
+/**STAGE 6**/
+/**********/
 /* do all cleanup */
 exit:
     if (ifd >= 0)
