@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "stdlib.h": "c",
+        "portsf.h": "c",
+        "breakpoints.h": "c",
+        "math.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}

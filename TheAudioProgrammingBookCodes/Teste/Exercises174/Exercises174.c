@@ -165,7 +165,7 @@ BREAKPOINT *get_breakpoints(FILE *fp, unsigned long *psize)
 
     /* fgets => get the data from the FILE to the line variable */
     /*
-        I believe when is reached the end of FILE the "while" breaks or when a condition on if
+        I think when reaches the end of FILE the "while" breaks or when a condition on if
         statements is true.
     */
     while (fgets(line, 80, fp))

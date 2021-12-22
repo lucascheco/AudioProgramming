@@ -2,13 +2,12 @@
 # My template for makefiles
 
 ################################
-#Just modify the exercise number
-EXERCIS = 221#
+PROGRAM = find_peak#
 ################################
 
 # Folders Flags
-SRC     = ../Resources/portsf
-INCLUDE = "../Resources/include"
+SRC     = ../../Resources/portsf
+INCLUDE = "../../Resources/include"
 
 # Command Flags
 CC      = gcc
@@ -20,11 +19,12 @@ MTHFLAG = -lm
 all:
 	$(CC) $(OBJFLAG) $(SRC)/portsf.c $(HS_FLAG) $(INCLUDE)
 	$(CC) $(OBJFLAG) $(SRC)/ieee80.c 
-	$(CC) $(OBJFLAG) Exercises$(EXERCIS).c $(HS_FLAG) $(INCLUDE)
-	$(CC) $(EXEFLAG) ex Exercises$(EXERCIS).o ieee80.o portsf.o $(MTHFLAG)
+	$(CC) $(OBJFLAG) $(PROGRAM).c $(HS_FLAG) $(INCLUDE)
+	$(CC) $(EXEFLAG) ../bin/$(PROGRAM) $(PROGRAM).o ieee80.o portsf.o $(MTHFLAG)
+	rm ./*.o
 
 run:
-
+	
 
 clean:
 	rm ./*.o

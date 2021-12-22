@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
+	
 const double samplerate = 44100;
 double coeff;
 double currentLevel;
@@ -19,23 +19,24 @@ void init(double levelBegin, double levelEnd, float releaseTime)
     coeff = (log(levelEnd) - log(levelBegin)) / (releaseTime * samplerate);
 }
 
-static inline void calculateEnvelope(int samplePoints, FILE *fp)
+void calculateEnvelope(int samplePoints, FILE *fp)
 {
     for (int i = 0; i < samplePoints; i++)
     {
         fprintf(fp, "%lf %lf\n", (double)i, currentLevel);
-        currentLevel += currentLevel * coeff;
+        fprintf(stdout, "%lf %lf\n", (double)i, currentLevel);
+        currentLevel += coeff * currentLevel;
     }
 }
-/* I do not understand this code */
+
 int main()
 {
     FILE *fp;
 
     fp = fopen("Env.txt", "w");
-    init(1.0, 0.0001, 4.0);
-    printf("%.10lf\n", coeff);
-    calculateEnvelope(10, fp);
+    init(1.0, 0.0001, 10.0);
+    //printf("%.10lf\n", coeff);
+    calculateEnvelope(30, fp);
     
     fclose(fp);
     return 0;

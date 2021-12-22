@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
     if (argc < ARG_NARGS)
     {
         printf("insufficient arguments.\n"
-               "usage:\n\tsfgain infile outfile buffer_size Limit N dBLevel\n");
+               "usage:\n\tsfgain infile outfile buffer_size Limit N dBLevel scaletype\n");
 
         return 1;
     }

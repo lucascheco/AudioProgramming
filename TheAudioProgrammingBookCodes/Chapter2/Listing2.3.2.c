@@ -5,8 +5,7 @@
 ************************************************************************************/
 #include <breakpoints.h>
 
-double val_at_brktime(const BREAKPOINT* points, unsigned long npoints, double time)
-{
+double val_at_brktime(const BREAKPOINT* points, unsigned long npoints, double time) {
     unsigned long i;
     BREAKPOINT left, right;
     double frac, val, width;
