@@ -156,7 +156,7 @@ int main(int argc, char** argv)
         for (i = 0, out_i = 0; i < framesread; i++)
         {
             stereopos = val_at_brktime(points, size, &pointnum, sampletime);
-            fprintf(stdout, "\t%lf\n", stereopos);
+            // fprintf(stdout, "\t%lf\n", stereopos);
             pos       = simplepan(stereopos);
            
             outbuffer[out_i++] = (float)(inbuffer[i] * pos.left);

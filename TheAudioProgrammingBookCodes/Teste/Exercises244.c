@@ -1,11 +1,8 @@
 /***********************************************************************************
     Author:      Lucas Pacheco.
-    Description: Code  from "The Audio Programming Book", chapter 2, envx .
-    Date:        16/11/2021
+    Description: Code  from "The Audio Programming Book", chapter 2, exercises 2.4.4.
+    Date:        30/12/2021
 ************************************************************************************/
-/* envx:
-         extract amplitude envelope from mono soundfile */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -148,7 +145,8 @@ int main(int argc, char* argv[]) {
         if ( fp )
             if ( fclose(fp) )
                 printf("envx: failed to close output file %s\n", argv[ARG_OUTFILE]);
-    
+    	if ( error )
+    		remove("../*.brk");
     psf_finish();
 
     return 0;
@@ -168,3 +166,4 @@ double maxsample(float* buf, unsigned long blocksize) {
 
     return peak;
 }
+

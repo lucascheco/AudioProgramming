@@ -1,7 +1,7 @@
 /***********************************************************************************
     Author:      Lucas Pacheco.
-    Description: Code  from "The Audio Programming Book", chapter 2, sfenv.
-    Date:        17/11/2021
+    Description: Code  from "The Audio Programming Book", chapter 2, exercises 2.4.2.
+    Date:        30/12/2021
 ************************************************************************************/
 
 #include <stdio.h>
@@ -30,14 +30,41 @@ int main(int argc, char** argv) {
     unsigned long ileft, iright;
 
     double frac, height, width, curpos;
+    double ampfactor = 1.0, inpeak = 0.0;
+    float scalefac;
+    PSF_CHPEAK *peaks = NULL;
 
-    if ( argc != ARG_NARGS ) {
+    if ( argc < ARG_NARGS ) {
         printf("Error: insufficient number of arguments.\n"
                "Usage: sfenv infile brkfile outfile\n"
                "       brkfile.brk is a breakpoint file\n"
                );
 
         return 1;
+    }
+
+    if ( argc > 1 ) {
+    	char flag;
+	while ( argv[1][0] == '-' ) {
+		flag = argv[1][1];
+
+		switch ( flag ) {
+		case '\0':
+			printf("ERROR: missing flag name.\n");
+			return 1;
+		case 'n':
+			ampfactor = atof(&argv[1][2]);
+			if  ( ampfactor > 1.0 || ampfactor < 0.0 ) {
+				printf("ERROR: ampfactor must be between 0.0 and 1.0\n");
+				return 1;
+			}
+			break;
+		default:
+			break;
+		}
+		argc--;
+		argv++;
+	}
     }
 
     /* read breakpoint file and verify it */
@@ -122,6 +149,50 @@ int main(int argc, char** argv) {
     /* allocate space for input and output frame buffer */
     inframe = (float*)malloc(sizeof(float) * inprops.chans * NFRAMES);
 
+    /* allocate space for PEAK info */
+    peaks = (PSF_CHPEAK *)malloc(inprops.chans * sizeof(PSF_CHPEAK));
+    if ( peaks == NULL ) {
+    	puts("No memory!\n");
+	error++;
+	goto exit;
+    }
+
+    if ( psf_sndReadPeaks(ifd, peaks, NULL) > 0 ) {
+    	long i;
+	for (i = 0; i < inprops.chans; i++) {
+		if ( peaks[i].val > inpeak ) {
+			inpeak = peaks[i].val;
+		}
+	}
+    } else {
+    	framesread = psf_sndReadFloatFrames(ifd, inframe, NFRAMES);
+
+	while ( framesread == NFRAMES ) {
+		double thispeak;
+		unsigned long blocksize = inprops.chans * NFRAMES;
+		
+		thispeak = maxsamp(inframe, blocksize);
+
+		if ( thispeak > inpeak ) {
+			inpeak = thispeak;
+		}
+	
+		framesread = psf_sndReadFloatFrames(ifd, inframe, NFRAMES);
+	}
+
+	if ( psf_sndSeek(ifd, 0, PSF_SEEK_SET ) < 0 ) {
+		printf("Error: unable to rewind infile.\n");
+		error++;
+		goto exit;
+	}
+    }
+
+    /* checking if the infile is not silent */	
+    if ( inpeak == 0.0 ) {
+    	printf("infile is silent! Outfile not created.\n");
+	goto exit;
+    }
+
     /* init time position counter for reading envelope */
     incr = 1.0 / inprops.srate;
 
@@ -138,6 +209,8 @@ int main(int argc, char** argv) {
     height = rightpoint.value - leftpoint.value;
 
     int more_points = 1;
+
+    scalefac = (float)(ampfactor / inpeak);
 
     while ( (framesread = psf_sndReadFloatFrames(ifd, inframe, NFRAMES)) > 0 ) {
         int i;
@@ -168,7 +241,7 @@ int main(int argc, char** argv) {
 		}
 	    }    
             
-	    inframe[i] = (float)(inframe[i] * thisamp);
+	    inframe[i] = (float)(inframe[i] * thisamp * scalefac);
 	}
 
         if ( psf_sndWriteFloatFrames(ofd, inframe, framesread) != framesread ) {

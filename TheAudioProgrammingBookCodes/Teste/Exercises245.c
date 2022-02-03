@@ -1,11 +1,8 @@
 /***********************************************************************************
     Author:      Lucas Pacheco.
-    Description: Code  from "The Audio Programming Book", chapter 2, envx .
-    Date:        16/11/2021
+    Description: Code  from "The Audio Programming Book", chapter 2, exercises 2.4.5.
+    Date:        30/12/2021
 ************************************************************************************/
-/* envx:
-         extract amplitude envelope from mono soundfile */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -36,8 +33,8 @@ int main(int argc, char* argv[]) {
         
     printf("ENVX: extract amplitude envelope"
            "from mono soundfile.\n");
-
-
+    /*(A)*/
+    /*(B) I think that the largest resonable window size is 1 msec less than the entire soundfile */
     /* Implementation of the -wN flag */
     if ( argc > 1 ) {
         char flag;
@@ -57,7 +54,12 @@ int main(int argc, char* argv[]) {
                     printf("bad value for Window Duration."
                            "Must be positive.\n");
                     return 1;
-                }
+                } else 
+		if ( windur <= 0.00002267573 ) {
+		    printf("bad value for Window Duration."
+		           "Must be greater than the distance between samples 1/samplerate.");
+		    return 1;
+		}
                 break;
             default:
                 break;
@@ -137,7 +139,7 @@ int main(int argc, char* argv[]) {
         error++;
     } else {
         printf("Done: %d errors\n", error);
-        printf("%ld breakpoints written to %s\n", npoints, argv[ARG_OUTFILE]);
+        printf("%lu breakpoints written to %s\n", npoints, argv[ARG_OUTFILE]);
     }
 
 /* clean up */
