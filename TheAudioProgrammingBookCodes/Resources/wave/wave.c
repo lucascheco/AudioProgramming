@@ -1,7 +1,7 @@
-#include <wave.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <wave.h>
 
 void oscil_init(OSCIL* osc, unsigned long srate) {
 	osc->twopiovrsr = TWOPI / (double) srate;
