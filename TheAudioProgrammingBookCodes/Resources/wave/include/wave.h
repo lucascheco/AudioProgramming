@@ -1,4 +1,4 @@
-#ifndef M_PI
+ifndef M_PI
 #define M_PI (3.1415926535897932)
 #endif
 #define TWOPI (2.0 * M_PI)
@@ -18,3 +18,7 @@ OSCIL* new_oscil(unsigned long srate);
 
 double sinetick(OSCIL* p_osc, double freq);
 
+double sqttick (OSCIL* p_osc, double freq);
+double sawdtick(OSCIL* p_osc, double freq);
+double sawutick(OSCIL* p_osc, double freq);
+double tritick (OSCIL* p_osc, double freq);
