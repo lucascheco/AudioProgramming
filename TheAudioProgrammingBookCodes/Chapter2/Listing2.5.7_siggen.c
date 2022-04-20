@@ -132,7 +132,7 @@ int main(int argc, char** argv) {
 		    nframes = remainder;
 
 	    for ( int j = 0; j < nframes; ++j ) {
-		    outframe[j] = (float) (amp * sinetick(p_osc, freq));
+		    outframe[j] = (float) (amp * tritick(p_osc, freq));
         }
 
         if ( psf_sndWriteFloatFrames(ofd, outframe, nframes) != nframes ) {
