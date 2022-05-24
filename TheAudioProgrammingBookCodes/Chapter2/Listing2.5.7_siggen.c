@@ -13,7 +13,9 @@
 
 #define NFRAMES 100
 
-enum {ARG_PROGNAME, ARG_OUTFILE, ARG_DUR, ARG_SRATE, ARG_AMP, ARG_FREQ, ARG_NARGS};
+enum {ARG_PROGNAME, ARG_OUTFILE, ARG_TYPE, ARG_DUR, ARG_SRATE, ARG_AMP, ARG_FREQ, ARG_NARGS};
+
+enum {WAVE_SINE, WAVE_TRIANGLE, WAVE_SQUARE, WAVE_SAWUP, WAVE_SAWDOWN, WAVE_NTYPES};
 
 int main(int argc, char** argv) {
 
@@ -29,16 +31,38 @@ int main(int argc, char** argv) {
     double srate, amp, freq, dur;
     unsigned long nbufs, outframes, remainder, nframes = NFRAMES;
 
-    /* Missing variables */
     PSF_CHPEAK* peaks = NULL;
     OSCIL* p_osc = NULL;
+    int wavetype = WAVE_SINE;
+    tickfunc tick;
+
+    /* Adding support to amplitude and frequency breakpoints */
+    BRKSTREAM* ampStream = NULL;
+    FILE *fpAmp = NULL;
+    unsigned long brkAmpSize = 0;
+    double minVal, maxVal;
+
+    BRKSTREAM* freqStream = NULL;
+    FILE *fpFreq = NULL;
+    unsigned long brkFreqSize = 0;
+    double minFreq, maxFreq;
 
 
     /* { Stage 2 } - Obtain and validate arguments from user. */
 
     if ( argc != ARG_NARGS ) {
         printf("Error: insufficient number of arguments.\n"
-               "Usage: siggen outfile dur srate amp freq\n"
+               "Usage: siggen outfile wavetype dur srate amp freq\n"
+               "where wavetype is one of:\n"
+               "\t0 = sine\n"
+               "\t1 = triangle\n"
+               "\t2 = square\n"
+               "\t3 = sawtooth up\n"
+               "\t4 = sawtooth down\n"
+               "dur = duration in seconds\n"
+               "srate = sampling rate in Hz\n"
+               "amp = amplitude value or breakpoint file (0 < amp <= 1.0)\n"
+               "freq = frequency in Hz or breakpoint file > 0\n"
                );
 
         return 1;
@@ -54,13 +78,9 @@ int main(int argc, char** argv) {
     	return 1;
     }
 
-    if ( (amp = atof(argv[ARG_AMP])) < 0.0 ) {
-    	printf("Error: Must amp must be greater than 0. .\n");
-    	return 1;
-    }
-
-    if ( (freq = atof(argv[ARG_FREQ])) < 0.0 ) {
-    	printf("Error: Must frequency must be greater than 0. .\n");
+    if ( (wavetype = atoi(argv[ARG_TYPE])) < 0 || wavetype >= WAVE_NTYPES ) {
+    	printf("Error: wavetype must be between 0 and %d.\n"
+               "use the enum list: WAVE_SINE, WAVE_TRIANGLE, WAVE_SQUARE, WAVE_SAWUP, WAVE_SAWDOWN\n", WAVE_NTYPES);
     	return 1;
     }
 
@@ -77,6 +97,61 @@ int main(int argc, char** argv) {
     if ( remainder > 0 )
 	    nbufs++;
 
+    fpAmp = fopen(argv[ARG_AMP], "r");
+    if (fpAmp == NULL) {
+        amp = atof(argv[ARG_AMP]);
+        if (amp <= 0.0 || amp > 1.0) {
+            printf("Error: Amplitude must be greater than 0 and less than 1.0.\n");
+            error++;
+            goto exit;
+        }
+    } else {
+        ampStream = bps_newstream(fpAmp, outprops.srate, &brkAmpSize);
+        if (bps_getminmax(ampStream, &minVal, &maxVal)) {
+            printf("Error readins range of breakpoint file %s.\n", argv[ARG_AMP]);
+            error++;
+            goto exit;
+        }
+
+        if (minVal < 0.0 || minVal > 1.0 || maxVal < 0.0 || maxVal > 1.0) {
+            printf("Error: amplitude values out of range in file %s: "
+                   "0.0 < amp <= 1.0\n", argv[ARG_AMP]);
+            error++;
+            goto exit;
+        }
+    }
+
+    fpFreq = fopen(argv[ARG_FREQ], "r");
+    if (fpFreq == NULL) {
+        freq = atof(argv[ARG_FREQ]);
+        if (freq <= 0.0) {
+            printf("Error: Frequency must be greater than 0.0.\n");
+            error++;
+            goto exit;
+        }
+    } else {
+        freqStream = bps_newstream(fpFreq, outprops.srate, &brkFreqSize);
+        if (bps_getminmax(freqStream, &minFreq, &maxFreq)) {
+            printf("Error readins range of breakpoint file %s.\n", argv[ARG_FREQ]);
+            error++;
+            goto exit;
+        }
+
+        if (minFreq < 0.0 || maxFreq < 0.0) {
+            printf("Error: frequency values out of range in file %s: "
+                   "freq > 0.0\n", argv[ARG_FREQ]);
+            error++;
+            goto exit;
+        }
+    }
+
+    switch (wavetype) {
+        case WAVE_SINE:     tick = sinetick; break;
+        case WAVE_TRIANGLE: tick = tritick;  break;
+        case WAVE_SQUARE:   tick = sqttick;  break;
+        case WAVE_SAWUP:    tick = sawutick; break;
+        case WAVE_SAWDOWN:  tick = sawdtick; break;
+    }
 
     /* start up portsf */
     if ( psf_init() ) {
@@ -132,7 +207,12 @@ int main(int argc, char** argv) {
 		    nframes = remainder;
 
 	    for ( int j = 0; j < nframes; ++j ) {
-		    outframe[j] = (float) (amp * tritick(p_osc, freq));
+            if (ampStream)
+                amp = bps_tick(ampStream);
+            if (freqStream)
+                freq = bps_tick(freqStream);
+
+		    outframe[j] = (float) (amp * tick(p_osc, freq));
         }
 
         if ( psf_sndWriteFloatFrames(ofd, outframe, nframes) != nframes ) {
@@ -176,6 +256,24 @@ int main(int argc, char** argv) {
 
     if (p_osc)
         free(p_osc);
+
+    if (ampStream) {
+        bps_freepoints(ampStream);
+        free(ampStream);
+    }
+
+    if (fpAmp)
+        if (fclose(fpAmp))
+            printf("Error closing amplitude breakpoint file %s\n", argv[ARG_AMP]);
+
+    if (freqStream) {
+        bps_freepoints(freqStream);
+        free(freqStream);
+    }
+
+    if (fpFreq)
+        if (fclose(fpFreq))
+            printf("Error closing frequency breakpoint file %s\n", argv[ARG_FREQ]);
 
     psf_finish();
 

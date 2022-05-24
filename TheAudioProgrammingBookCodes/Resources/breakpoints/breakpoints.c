@@ -201,8 +201,7 @@ BRKSTREAM* bps_newstream(FILE* fp, unsigned long srate, unsigned long* size)
 	BREAKPOINT* points;
 	unsigned long npoints;
 	
-	if (srate==0)
-	{
+	if (srate == 0) {
 		printf("Error creating stream - sample rate cannot be zero.\n");
 		return NULL;
 	}
@@ -210,44 +209,48 @@ BRKSTREAM* bps_newstream(FILE* fp, unsigned long srate, unsigned long* size)
 	stream = (BRKSTREAM*)malloc(sizeof(BRKSTREAM));
 	if (stream==NULL)
 		return NULL;
+		
 	/* load breakpoint file and setup stream info */
 	points = get_breakpoints(fp,&npoints);
-	if (points == NULL)
-	{
+	if (points == NULL) {
 		free(stream);
 		return NULL;
 	}
-	if (npoints<2)
-	{
+
+	if (npoints < 2) {
 		printf("breakpoint file is too small - "
 		       "at least two points required\n");
 		free(stream);
 		return(NULL);	
 	}
+
 	/* init the stream object */
 	stream->points = points;
 	stream->npoints = npoints;
+
 	/* counters */
 	stream->curpos = 0.0;
-	stream->ileft = 0;
+	stream->ileft  = 0;
 	stream->iright = 1;
-	stream->incr = 1.0/srate;
+	stream->incr   = 1.0 / srate;
+
 	/* first span */
-	stream->leftpoint = stream->points[stream->ileft];
-	stream->rightpoint = stream->points[stream->iright];
-	stream->width = stream->rightpoint.time - stream->leftpoint.time;
-	stream->height = stream->rightpoint.value - stream->leftpoint.value;
+	stream->leftpoint   = stream->points[stream->ileft];
+	stream->rightpoint  = stream->points[stream->iright];
+	stream->width       = stream->rightpoint.time - stream->leftpoint.time;
+	stream->height      = stream->rightpoint.value - stream->leftpoint.value;
 	stream->more_points = 1;
+	
 	if (size)
 		*size = stream->npoints;
+
 	return stream;
 }
 
 /* frees any internal memory in the breakpoint stream */
 void bps_freepoints(BRKSTREAM* stream)
 {
-	if (stream && stream->points)
-	{
+	if (stream && stream->points) {
 		free(stream->points);
 		stream->points = NULL;
 	}
@@ -259,30 +262,29 @@ double bps_tick(BRKSTREAM* stream)
 	double thisval, frac;	
 
 	/* beyond end of breakpoint data? */
-	if (stream->more_points==0)
+	if (stream->more_points == 0)
 		return stream->rightpoint.value;
-	if (stream->width==0)
+
+	if (stream->width == 0)
 		thisval = stream->rightpoint.value;	
-	else
-	{
+	else {
 		/* get value from this span using linear interpolation */
-		frac = (stream->curpos - stream->leftpoint.time)/stream->width;
+		frac = (stream->curpos - stream->leftpoint.time) / stream->width;
 		thisval = stream->leftpoint.value + (stream->height * frac); 
 	}
+
 	/* move up ready for next sample */
 	stream->curpos += stream->incr;	
-	if (stream->curpos > stream->rightpoint.time)
-	{
+	if (stream->curpos > stream->rightpoint.time) {
 		/* need to go to next span? */	
-		stream->ileft++; stream->iright++;	
-		if (stream->iright < stream->npoints)
-		{
-			stream->leftpoint = stream->points[stream->ileft];
+		stream->ileft++; 
+		stream->iright++;	
+		if (stream->iright < stream->npoints) {
+			stream->leftpoint  = stream->points[stream->ileft];
 			stream->rightpoint = stream->points[stream->iright];
-			stream->width = stream->rightpoint.time - stream->leftpoint.time;
+			stream->width  = stream->rightpoint.time - stream->leftpoint.time;
 			stream->height = stream->rightpoint.value - stream->leftpoint.value;	
-		}
-		else
+		} else
 			stream->more_points = 0;
 	}
 
@@ -301,12 +303,13 @@ int bps_getminmax(BRKSTREAM* stream, double* min, double* max)
 	unsigned long i;
 	*min = stream->points[0].value;
 	*max = stream->points[0].value;
-	for (i=1; i < stream->npoints; i++)	
-	{
+	for (i=1; i < stream->npoints; i++) {
 		if (stream->points[i].value < *min)
 			*min = stream->points[i].value;
+
 		if (stream->points[i].value > *max)
 			*max = stream->points[i].value;	
 	}
+
 	return 0;
 }

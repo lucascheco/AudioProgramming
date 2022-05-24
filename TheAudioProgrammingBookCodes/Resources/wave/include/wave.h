@@ -17,8 +17,9 @@ OSCIL* oscil(void);
 OSCIL* new_oscil(unsigned long srate);
 
 double sinetick(OSCIL* p_osc, double freq);
-
 double sqttick (OSCIL* p_osc, double freq);
 double sawdtick(OSCIL* p_osc, double freq);
 double sawutick(OSCIL* p_osc, double freq);
 double tritick (OSCIL* p_osc, double freq);
+
+typedef double (*tickfunc)(OSCIL* p_osc, double freq);

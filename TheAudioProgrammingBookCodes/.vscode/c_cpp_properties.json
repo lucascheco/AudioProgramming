@@ -1,17 +1,15 @@
 {
-    "configurations": [
-        {
-            "name": "Linux",
-            "includePath": [
-                "${default}",
-                "${workspaceFolder}/Resources/include",
-                "${workspaceFolder}/Resources/breakpoints/include"
-            ],
-            "compilerPath": "/usr/bin/gcc",
-            "cStandard": "gnu17",
-            "cppStandard": "gnu++14",
-            "intelliSenseMode": "linux-gcc-x64"
-        }
-    ],
-    "version": 4
+  "configurations": [
+    {
+      "name": "windows-gcc-x64",
+      "includePath": [
+        "${workspaceFolder}/**"
+      ],
+      "compilerPath": "C:/msys64/mingw64/bin/gcc.exe",
+      "cStandard": "${default}",
+      "cppStandard": "${default}",
+      "intelliSenseMode": "windows-gcc-x64"
+    }
+  ],
+  "version": 4
 }

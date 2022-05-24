@@ -76,13 +76,68 @@ double sqttick (OSCIL* p_osc, double freq) {
 }
 
 double sawdtick(OSCIL* p_osc, double freq) {
+	double val;
 
+	if ( p_osc->curfreq != freq ) {
+        p_osc->curfreq = freq;
+        p_osc->incr = p_osc->twopiovrsr * freq;
+    }
+
+	val = 1.0 - 2.0 * (p_osc->curphase / TWOPI);
+
+	p_osc->curphase += p_osc->incr;
+
+	if ( p_osc->curphase >= TWOPI )
+		p_osc->curphase -= TWOPI;
+	
+	if ( p_osc->curphase < 0.0 )
+		p_osc->curphase += TWOPI;
+	
+	return val;
 }
 
 double sawutick(OSCIL* p_osc, double freq) {
+	double val;
 
+	if ( p_osc->curfreq != freq ) {
+        p_osc->curfreq = freq;
+        p_osc->incr = p_osc->twopiovrsr * freq;
+    }
+
+	val = (2.0 * (p_osc->curphase / TWOPI)) - 1.0;
+
+	p_osc->curphase += p_osc->incr;
+
+	if ( p_osc->curphase >= TWOPI )
+		p_osc->curphase -= TWOPI;
+	
+	if ( p_osc->curphase < 0.0 )
+		p_osc->curphase += TWOPI;
+	
+	return val;
 }
 
 double tritick (OSCIL* p_osc, double freq) {
+	double val;
 
+	if ( p_osc->curfreq != freq ) {
+        p_osc->curfreq = freq;
+        p_osc->incr = p_osc->twopiovrsr * freq;
+    }
+
+	val = (2.0 * (p_osc->curphase / TWOPI)) - 1.0;
+	if (val < 0.0)
+		val = -val;
+	
+	val = 2.0 * (val - 0.5);
+
+	p_osc->curphase += p_osc->incr;
+
+	if ( p_osc->curphase >= TWOPI )
+		p_osc->curphase -= TWOPI;
+	
+	if ( p_osc->curphase < 0.0 )
+		p_osc->curphase += TWOPI;
+	
+	return val;
 }
