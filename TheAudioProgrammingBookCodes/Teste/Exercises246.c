@@ -132,8 +132,8 @@ int main(int argc, char* argv[]) {
         double amp;
         amp = maxsamp(inframe, framesread);
 	
-	if (norm_flag)
-		amp *= scalefac;
+        if (norm_flag)
+            amp *= scalefac;
 
         /* store brktime and amp as a breakpoint */
         if ( fprintf(fp, "%f\t%f\n", brktime, amp) < 2 ) {

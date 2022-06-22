@@ -141,35 +141,35 @@ int main(int argc, char** argv) {
 
     while ( (framesread = psf_sndReadFloatFrames(ifd, inframe, NFRAMES)) > 0 ) {
         int i;
-	double thisamp = rightpoint.value;
+	    double thisamp = rightpoint.value;
         for ( i = 0; i < framesread; i++ ) {
             if ( more_points ) {
-	    	if ( width == 0 ) {
-			thisamp = rightpoint.value;
-		} else {
-			/* not vertical: get interpolation value from this span */
-			frac = (curpos - leftpoint.time) / width;
-			thisamp = leftpoint.value + ( height * frac );
-		}
-		/* move up ready for next sample */
-		curpos += incr;
-		if ( curpos > rightpoint.time ) { /* go to the next span? */
-			ileft++;
-			iright++;
+                if ( width == 0 ) {
+                    thisamp = rightpoint.value;
+                } else {
+                    /* not vertical: get interpolation value from this span */
+                    frac = (curpos - leftpoint.time) / width;
+                    thisamp = leftpoint.value + ( height * frac );
+                }
+                /* move up ready for next sample */
+                curpos += incr;
+                if ( curpos > rightpoint.time ) { /* go to the next span? */
+                    ileft++;
+                    iright++;
 
-			if (iright < npoints) { /* have another span, go */
-				leftpoint = points[ileft];
-				rightpoint = points[iright];
-				width = rightpoint.time - leftpoint.time;
-				height = rightpoint.value - leftpoint.value;
-			} else {
-				more_points = 0;
-			}
-		}
-	    }    
-            
-	    inframe[i] = (float)(inframe[i] * thisamp);
-	}
+                    if (iright < npoints) { /* have another span, go */
+                        leftpoint = points[ileft];
+                        rightpoint = points[iright];
+                        width = rightpoint.time - leftpoint.time;
+                        height = rightpoint.value - leftpoint.value;
+                    } else {
+                        more_points = 0;
+                    }
+                }
+            }    
+                
+            inframe[i] = (float)(inframe[i] * thisamp);
+        }
 
         if ( psf_sndWriteFloatFrames(ofd, inframe, framesread) != framesread ) {
             printf("Error writing to outfile.\n");

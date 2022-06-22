@@ -1,15 +1,16 @@
 # Author: LucasPacheco
-# My template for makefiles
 
 ################################
 #Just modify the exercise number
-EXERCIS = 246#
+EXERCIS = 253#
 ################################
 
 # Folders Flags
 PSF     = ../Resources/portsf
 BRK     = ../Resources/breakpoints
 INCLUDE = "../Resources/include"
+SRC3     = ../Resources/wave
+INCLUDE3 = ../Resources/wave/include
 
 # Command Flags
 CC      = gcc
@@ -22,8 +23,9 @@ all:
 	$(CC) $(OBJFLAG) $(PSF)/portsf.c $(HS_FLAG) $(INCLUDE)
 	$(CC) $(OBJFLAG) $(PSF)/ieee80.c 
 	$(CC) $(OBJFLAG) $(BRK)/breakpoints.c $(HS_FLAG) "$(BRK)/include"
+	$(CC) $(OBJFLAG) $(SRC3)/wave.c $(HS_FLAG) $(INCLUDE3)
 	$(CC) $(OBJFLAG) Exercises$(EXERCIS).c $(HS_FLAG) $(INCLUDE) $(HS_FLAG) "$(BRK)/include"
-	$(CC) $(EXEFLAG) ex Exercises$(EXERCIS).o ieee80.o portsf.o breakpoints.o $(MTHFLAG)
+	$(CC) $(EXEFLAG) ex Exercises$(EXERCIS).o ieee80.o portsf.o breakpoints.o wave.o $(MTHFLAG)
 
 run:
 
