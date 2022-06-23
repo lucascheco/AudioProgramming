@@ -1,6 +1,6 @@
 /***********************************************************************************
     Author:      Lucas Pacheco.
-    Description: Exercise from "The Audio Programming Book", chapter 2, exercises 2.5.3.
+    Description: Exercise from "The Audio Programming Book", chapter 2, exercises 2.5.4.
     Date:        22/06/2022
 ************************************************************************************/
 
@@ -13,9 +13,11 @@
 
 #define NFRAMES 100
 
-enum {ARG_PROGNAME, ARG_OUTFILE, ARG_CHANS, ARG_TYPE, ARG_DUR, ARG_SRATE, ARG_AMP, ARG_FREQ, ARG_NARGS};
+enum {ARG_PROGNAME, ARG_OUTFILE, ARG_CHANS, ARG_SAMPTYPE, ARG_TYPE, ARG_DUR, ARG_SRATE, ARG_AMP, ARG_FREQ, ARG_NARGS};
 
 enum {WAVE_SINE, WAVE_TRIANGLE, WAVE_SQUARE, WAVE_SAWUP, WAVE_SAWDOWN, WAVE_NTYPES};
+
+int isnum(const char* arg, double* val);
 
 int main(int argc, char** argv) {
 
@@ -23,6 +25,7 @@ int main(int argc, char** argv) {
     PSF_PROPS outprops;
     psf_format outformat = PSF_FMT_UNKNOWN;
     int chans = 1;
+    int sampType = PSF_SAMP_16;
 
     /* init all resources vals to default states */
     int ofd = -1;
@@ -53,7 +56,7 @@ int main(int argc, char** argv) {
 
     if ( argc != ARG_NARGS ) {
         printf("Error: insufficient number of arguments.\n"
-               "Usage: siggen outfile nChannels wavetype dur srate amp freq\n"
+               "Usage: siggen outfile nChannels samptype wavetype dur srate amp freq\n"
                "where wavetype is one of:\n"
                "\t0 = sine\n"
                "\t1 = triangle\n"
@@ -91,11 +94,18 @@ int main(int argc, char** argv) {
                "Setting default mono file...\n");
         chans = 1;
     }
+    
+    sampType = atoi(argv[ARG_SAMPTYPE]);
+    if (sampType < PSF_SAMP_8 || sampType > PSF_SAMP_IEEE_FLOAT) {
+        printf("Warning: The sample type must be a valid enum or number between 1 and 8\n"
+               "Setting default (1)16-bit file...\n");
+        sampType = PSF_SAMP_16;
+    }
 
     /* define outfile format - this sets mono 16-bit format */
     outprops.srate = srate;
     outprops.chans = chans;
-    outprops.samptype = (psf_stype)PSF_SAMP_16; /* or whateveris required */
+    outprops.samptype = (psf_stype)sampType; /* or whateveris required */
     outprops.chformat = STDWAVE;
 
     outframes = (unsigned long) (dur * outprops.srate + 0.5);
@@ -107,8 +117,14 @@ int main(int argc, char** argv) {
 
     fpAmp = fopen(argv[ARG_AMP], "r");
     if (fpAmp == NULL) {
-        amp = atof(argv[ARG_AMP]);
-        if (amp <= 0.0 || amp > 1.0) {
+        amp = strtod(argv[ARG_AMP], NULL);
+        if (amp == 0) {
+            printf("Error: Non-numeric value.\n");
+            error++;
+            goto exit;
+        }
+
+        if (amp < 0.0 || amp > 1.0) {
             printf("Error: Amplitude must be greater than 0 and less than 1.0.\n");
             error++;
             goto exit;
@@ -286,4 +302,11 @@ int main(int argc, char** argv) {
     psf_finish();
 
     return error;
+}
+
+int isnum(const char* arg, double* val) {
+    int amp = strtod(arg, NULL);
+    *val = amp;
+    
+    return amp;
 }

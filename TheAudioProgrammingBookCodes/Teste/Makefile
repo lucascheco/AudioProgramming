@@ -2,7 +2,7 @@
 
 ################################
 #Just modify the exercise number
-EXERCIS = 253#
+EXERCIS = 258#
 ################################
 
 # Folders Flags
@@ -24,7 +24,7 @@ all:
 	$(CC) $(OBJFLAG) $(PSF)/ieee80.c 
 	$(CC) $(OBJFLAG) $(BRK)/breakpoints.c $(HS_FLAG) "$(BRK)/include"
 	$(CC) $(OBJFLAG) $(SRC3)/wave.c $(HS_FLAG) $(INCLUDE3)
-	$(CC) $(OBJFLAG) Exercises$(EXERCIS).c $(HS_FLAG) $(INCLUDE) $(HS_FLAG) "$(BRK)/include"
+	$(CC) $(OBJFLAG) Exercises$(EXERCIS).c $(HS_FLAG) $(INCLUDE) $(HS_FLAG) "$(BRK)/include" $(HS_FLAG) $(INCLUDE3)
 	$(CC) $(EXEFLAG) ex Exercises$(EXERCIS).o ieee80.o portsf.o breakpoints.o wave.o $(MTHFLAG)
 
 run:

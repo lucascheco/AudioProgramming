@@ -34,10 +34,8 @@ double sinetick(OSCIL* p_osc, double freq) {
 	double val;
 	
 	val = sin(p_osc->curphase);
-	if ( p_osc->curfreq != freq ) {
-		p_osc->curfreq = freq;
-		p_osc->incr = p_osc->twopiovrsr * freq;
-	}
+	
+	UPDATE_FREQ(p_osc, freq);
 
 	p_osc->curphase += p_osc->incr;
 	if ( p_osc->curphase >= TWOPI ) {
@@ -53,10 +51,7 @@ double sinetick(OSCIL* p_osc, double freq) {
 double sqttick (OSCIL* p_osc, double freq) {
     double val;
 
-    if ( p_osc->curfreq != freq ) {
-        p_osc->curfreq = freq;
-        p_osc->incr = p_osc->twopiovrsr * freq;
-    }
+	UPDATE_FREQ(p_osc, freq);
     
     if ( p_osc->curphase <= M_PI ) { 
         val = 1.0;
@@ -78,10 +73,7 @@ double sqttick (OSCIL* p_osc, double freq) {
 double sawdtick(OSCIL* p_osc, double freq) {
 	double val;
 
-	if ( p_osc->curfreq != freq ) {
-        p_osc->curfreq = freq;
-        p_osc->incr = p_osc->twopiovrsr * freq;
-    }
+	UPDATE_FREQ(p_osc, freq);
 
 	val = 1.0 - 2.0 * (p_osc->curphase / TWOPI);
 
@@ -99,10 +91,7 @@ double sawdtick(OSCIL* p_osc, double freq) {
 double sawutick(OSCIL* p_osc, double freq) {
 	double val;
 
-	if ( p_osc->curfreq != freq ) {
-        p_osc->curfreq = freq;
-        p_osc->incr = p_osc->twopiovrsr * freq;
-    }
+	UPDATE_FREQ(p_osc, freq);
 
 	val = (2.0 * (p_osc->curphase / TWOPI)) - 1.0;
 
@@ -120,10 +109,7 @@ double sawutick(OSCIL* p_osc, double freq) {
 double tritick (OSCIL* p_osc, double freq) {
 	double val;
 
-	if ( p_osc->curfreq != freq ) {
-        p_osc->curfreq = freq;
-        p_osc->incr = p_osc->twopiovrsr * freq;
-    }
+	UPDATE_FREQ(p_osc, freq);
 
 	val = (2.0 * (p_osc->curphase / TWOPI)) - 1.0;
 	if (val < 0.0)
@@ -140,4 +126,26 @@ double tritick (OSCIL* p_osc, double freq) {
 		p_osc->curphase += TWOPI;
 	
 	return val;
+}
+
+double pmwtick (OSCIL* p_osc, double freq, double pwmod) {
+    double val;
+
+	UPDATE_FREQ(p_osc, freq);
+    
+    if ( p_osc->curphase <= M_PI * pwmod / 50.0 ) { 
+        val = 1.0;
+    } else {
+        val = -1.0;
+    }
+
+    p_osc->curphase += p_osc->incr;
+
+    if ( p_osc->curphase >= TWOPI ) 
+        p_osc->curphase -= TWOPI;
+
+    if ( p_osc->curphase < 0.0 )
+        p_osc->curphase += TWOPI;
+
+    return val;
 }
