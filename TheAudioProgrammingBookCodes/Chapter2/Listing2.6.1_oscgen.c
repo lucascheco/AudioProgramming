@@ -10,6 +10,7 @@
 #include <breakpoints.h>
 #include <math.h>
 #include <wave.h>
+#include <time.h>
 
 #define NFRAMES 100
 
@@ -55,6 +56,9 @@ int main(int argc, char** argv) {
     FILE *fpFreq = NULL;
     unsigned long brkFreqSize = 0;
     double minFreq, maxFreq;
+    
+    /* Measuring Processing time */
+    clock_t starttime, endtime;
 
 
     /* { Stage 2 } - Obtain and validate arguments from user. */
@@ -295,6 +299,8 @@ int main(int argc, char** argv) {
 
     /* { Stage 4 } - Perform main processing loop. */
 
+    printf("processing....\n");
+    starttime = clock();
     /* Loop right here */
     for ( int i = 0; i < nbufs; ++i ) {
     	if ( i == nbufs - 1 )
@@ -321,6 +327,8 @@ int main(int argc, char** argv) {
 	    }
 
     }
+    endtime = clock();
+    printf("Elapsed time = %f secs\n", (endtime - starttime) / (double)CLOCKS_PER_SEC);
 
 
     /* { Stage 5 } - Report to the user */
