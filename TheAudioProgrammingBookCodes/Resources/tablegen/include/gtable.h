@@ -1,3 +1,9 @@
+
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <wave.h>
+
 typedef struct t_gtable
 {
     double* table; /* Array containing the waveform */

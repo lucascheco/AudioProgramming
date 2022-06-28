@@ -1,7 +1,7 @@
 /***********************************************************************************
     Author:      Lucas Pacheco.
-    Description: Code  from "The Audio Programming Book", chapter 2, oscgen.
-    Date:        23/06/2022
+    Description: Code  from "The Audio Programming Book", chapter 2, tabgen.
+    Date:        27/06/2022
 ************************************************************************************/
 
 #include <stdio.h>
@@ -9,12 +9,12 @@
 #include <portsf.h>
 #include <breakpoints.h>
 #include <math.h>
-#include <wave.h>
+#include <gtable.h>
 #include <time.h>
 
 #define NFRAMES 100
 
-enum {ARG_PROGNAME, ARG_OUTFILE, ARG_CHANS, ARG_SAMPTYPE, ARG_TYPE, ARG_DUR, ARG_SRATE, ARG_AMP, ARG_FREQ, ARG_NOSCS, ARG_NARGS};
+enum {ARG_PROGNAME, ARG_OUTFILE, ARG_CHANS, ARG_SAMPTYPE, ARG_TYPE, ARG_DUR, ARG_SRATE, ARG_AMP, ARG_FREQ, ARG_NHARMS, ARG_NARGS};
 
 enum {WAVE_TRIANGLE, WAVE_SQUARE, WAVE_SAWUP, WAVE_SAWDOWN, WAVE_NTYPES};
 
@@ -36,14 +36,13 @@ int main(int argc, char** argv) {
 
     PSF_CHPEAK* peaks = NULL;
     
-    /* Oscilator bank */
-    OSCIL** oscs = NULL;
-    double* oscamps = NULL;
-    double* oscfreqs = NULL;
-    unsigned long noscs;
+    /* gtable */
+    GTABLE* gtable = NULL;
+    unsigned long tabsize = 1024;
+    unsigned long nharms;
 
-    double ampfac, freqfac, ampadjust;
-
+    OSCILT* p_osc;
+    double phase = 0.0;
     int wavetype = WAVE_TRIANGLE;
 
     /* Adding support to amplitude and frequency breakpoints */
@@ -57,6 +56,9 @@ int main(int argc, char** argv) {
     unsigned long brkFreqSize = 0;
     double minFreq, maxFreq;
     
+	double ampbuf[NFRAMES];
+	double freqbuf[NFRAMES];
+
     /* Measuring Processing time */
     clock_t starttime, endtime;
 
@@ -65,7 +67,7 @@ int main(int argc, char** argv) {
 
     if ( argc != ARG_NARGS ) {
         printf("Error: insufficient number of arguments.\n"
-               "Usage: oscgen outfile nChannels samptype wavetype dur srate amp freq noscs\n"
+               "Usage: tabgen outfile nChannels samptype wavetype dur srate amp freq nharms\n"
                "where wavetype is one of:\n"
                "\t0 = triangle\n"
                "\t1 = square\n"
@@ -75,7 +77,7 @@ int main(int argc, char** argv) {
                "srate = sampling rate in Hz\n"
                "amp = amplitude value or breakpoint file (0 < amp <= 1.0)\n"
                "freq = frequency in Hz or breakpoint file > 0\n"
-               "noscs = number of oscilators\n"
+               "nharms = number of harmonics\n"
                );
 
         return 1;
@@ -138,6 +140,9 @@ int main(int argc, char** argv) {
             error++;
             goto exit;
         }
+
+        for(int i = 0; i < NFRAMES; ++i)
+			ampbuf[i] = amp;
     } else {
         ampStream = bps_newstream(fpAmp, outprops.srate, &brkAmpSize);
         if (bps_getminmax(ampStream, &minVal, &maxVal)) {
@@ -162,6 +167,9 @@ int main(int argc, char** argv) {
             error++;
             goto exit;
         }
+        
+        for(int i = 0; i < NFRAMES; ++i)
+			freqbuf[i] = freq;
     } else {
         freqStream = bps_newstream(fpFreq, outprops.srate, &brkFreqSize);
         if (bps_getminmax(freqStream, &minFreq, &maxFreq)) {
@@ -178,9 +186,9 @@ int main(int argc, char** argv) {
         }
     }
 
-    noscs = atoi(argv[ARG_NOSCS]);
-    if (noscs < 1) {
-        printf("Error: number of oscilators must be at least 1.\n");
+    nharms = atoi(argv[ARG_NHARMS]);
+    if (nharms < 1) {
+        printf("Error: number of harmonics must be at least 1.\n");
         error++;
         goto exit;
     }
@@ -223,79 +231,30 @@ int main(int argc, char** argv) {
         goto exit;
     }
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    /* Constructing oscillator bank */
-    oscamps = (double*) malloc(noscs * sizeof(double));
-    if (oscamps == NULL) {
-        puts("No memory for oscamps!\n");
-        error++;
-        goto exit;
-    }
-
-    oscfreqs = (double*) malloc(noscs * sizeof(double));
-    if (oscfreqs == NULL) {
-        puts("No memory for oscfreqs!\n");
-        error++;
-        goto exit;
-    }
-
-    oscs = (OSCIL**) malloc(noscs * sizeof(OSCIL*));
-    if (oscs == NULL) {
-        puts("No memory for oscs!\n");
-        error++;
-        goto exit;
-    }
-
-    /*** initialize arrays ***/
-    freqfac = 1.0;
-    ampadjust = 0.0;
-
+    /* Constructing GTABLE */
     switch (wavetype)
     {
     case WAVE_SQUARE:
-        for (int i = 0; i < noscs; ++i) {
-            ampfac = 1.0 / freqfac;
-            oscamps[i] = ampfac;
-            oscfreqs[i] = freqfac;
-            freqfac += 2.0;
-            ampadjust += ampfac;
-        }
+        gtable = new_square(tabsize, nharms);
         break;
     case WAVE_TRIANGLE:
-        for (int i = 0; i < noscs; ++i) {
-            ampfac = 1.0 / (freqfac * freqfac);
-            oscamps[i] = ampfac;
-            oscfreqs[i] = freqfac;
-            freqfac += 2.0;
-            ampadjust += ampfac;
-        }
+        gtable = new_triangle(tabsize, nharms);
         break;
     case WAVE_SAWDOWN:
+        gtable = new_saw(tabsize, nharms, 0);
+        break;
     case WAVE_SAWUP:
-        for (int i = 0; i < noscs; ++i) {
-            ampfac = 1.0 / freqfac;
-            oscamps[i] = ampfac;
-            oscfreqs[i] = freqfac;
-            freqfac += 1.0;
-            ampadjust += ampfac;
-        }
-
-        if (wavetype == WAVE_SAWUP)
-            ampadjust = -ampadjust;
+        gtable = new_saw(tabsize, nharms, 1);   
         break;
     }
 
-    for (int i = 0; i < noscs; ++i)
-        oscamps[i] /= ampadjust;
-
-
-    for (int i = 0; i < noscs; ++i) {
-        oscs[i] = new_oscil(outprops.srate);
-        if (oscs[i] == NULL) {
-            puts("No memory for oscillators!\n");
-            error++;
-            goto exit;
-        }
+    p_osc = new_oscilt(srate, gtable, phase);
+    if(p_osc == NULL){
+        puts("no memory for oscillators\n");
+        error++;
+        goto exit;
     }
+
 
     /* { Stage 4 } - Perform main processing loop. */
 
@@ -306,20 +265,17 @@ int main(int argc, char** argv) {
     	if ( i == nbufs - 1 )
 		    nframes = remainder;
 
-	    for ( int j = 0; j < nframes * chans; ++j ) {
+	    for ( int j = 0; j < nframes; ++j ) {
             double val = 0.0;
             if (ampStream)
                 amp = bps_tick(ampStream);
             if (freqStream)
                 freq = bps_tick(freqStream);
             
-            for (long k = 0; k < noscs; ++k) {
-                val += oscamps[k] * sinetick(oscs[k], freq * oscfreqs[k]);
+            val = tabitick(p_osc, freq);
+            for (long k = 0; k < chans; ++k) {
+                outframe[j * outprops.chans + k] = (float)(val  * amp);
             }
-
-            for(long k = 0; k < outprops.chans; ++k) {				
-				outframe[j * outprops.chans + k] = (float)(val  * amp);
-			}
         }
 
         if ( psf_sndWriteFloatFrames(ofd, outframe, nframes) != nframes ) {
@@ -380,20 +336,10 @@ int main(int argc, char** argv) {
     if (fpFreq)
         if (fclose(fpFreq))
             printf("Error closing frequency breakpoint file %s\n", argv[ARG_FREQ]);
-
-    if (oscamps)
-        free(oscamps);
-
-    if (oscfreqs)
-        free(oscfreqs);
-
-    for (int i = 0; i < noscs; ++i) {
-        if (oscs[i])
-            free(oscs[i]);
-    }
-    
-    if (oscs)
-        free(oscs);
+    if (gtable)
+        gtable_free(&gtable);
+        
+    free(p_osc);
 
     psf_finish();
 

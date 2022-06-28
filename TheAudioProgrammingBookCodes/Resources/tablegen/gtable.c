@@ -1,4 +1,3 @@
-#include <wave.h>
 #include <gtable.h>
 
 static void norm_gtable(GTABLE* gtable);
@@ -85,7 +84,7 @@ double tabtick(OSCILT* p_osc, double freq)
 
     if (p_osc->osc.curfreq != freq)
     {
-        p_osc->osc.freq = freq;
+        p_osc->osc.curfreq = freq;
         p_osc->osc.incr = p_osc->sizeovrsr * p_osc->osc.curfreq;
     }
 
@@ -295,7 +294,7 @@ GTABLE* new_saw(unsigned long length, unsigned long nharms, int up)
     step = TWOPI / length;
     if (up)
         amp = -1;
-        
+
     for (i = 0; i < nharms; ++i)
     {
         val = amp / harmonic;
