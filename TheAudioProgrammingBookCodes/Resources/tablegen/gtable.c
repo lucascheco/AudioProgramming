@@ -309,6 +309,34 @@ GTABLE* new_saw(unsigned long length, unsigned long nharms, int up)
     return gtable;
 }
 
+GTABLE* new_pulse(unsigned long length,unsigned long nharms)
+{
+	unsigned long i, j;
+	double step;
+	GTABLE* gtable;
+	int harmonic = 1;
+
+	if(length == 0 || nharms == 0 || nharms >= length / 2)
+		return NULL;
+
+	gtable =  new_gtable(length);
+	if(gtable == NULL)
+		return NULL;
+
+	step  = TWOPI / length ;
+	for (i = 0; i < nharms; i++) 
+    {
+		for(j = 0; j < gtable->length; j++)
+			gtable->table[j] += cos(step * harmonic * j);
+
+		harmonic++;
+	}
+
+	norm_gtable(gtable);	
+	
+    return gtable;
+}
+
 static void norm_gtable(GTABLE* gtable)
 {
     unsigned long i;

@@ -14,9 +14,9 @@
 
 #define NFRAMES 100
 
-enum {ARG_PROGNAME, ARG_OUTFILE, ARG_CHANS, ARG_SAMPTYPE, ARG_TYPE, ARG_DUR, ARG_SRATE, ARG_AMP, ARG_FREQ, ARG_NHARMS, ARG_NARGS};
+enum {ARG_PROGNAME, ARG_OUTFILE, ARG_CHANS, ARG_SAMPTYPE, ARG_TYPE, ARG_DUR, ARG_SRATE, ARG_AMP, ARG_FREQ, ARG_NHARMS, ARG_TABSIZE, ARG_I, ARG_NARGS};
 
-enum {WAVE_TRIANGLE, WAVE_SQUARE, WAVE_SAWUP, WAVE_SAWDOWN, WAVE_NTYPES};
+enum {WAVE_TRIANGLE, WAVE_SQUARE, WAVE_SAWUP, WAVE_SAWDOWN, WAVE_PULSE, WAVE_NTYPES};
 
 int main(int argc, char** argv) {
 
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     
     /* gtable */
     GTABLE* gtable = NULL;
-    unsigned long tabsize = 1024;
+    unsigned long tabsize = 128;
     unsigned long nharms;
 
     OSCILT* p_osc;
@@ -59,6 +59,9 @@ int main(int argc, char** argv) {
 	double ampbuf[NFRAMES];
 	double freqbuf[NFRAMES];
 
+    char t;
+    gtickfunc tick;
+
     /* Measuring Processing time */
     clock_t starttime, endtime;
 
@@ -67,7 +70,7 @@ int main(int argc, char** argv) {
 
     if ( argc != ARG_NARGS ) {
         printf("Error: insufficient number of arguments.\n"
-               "Usage: tabgen outfile nChannels samptype wavetype dur srate amp freq nharms\n"
+               "Usage: tabgen outfile nChannels samptype wavetype dur srate amp freq nharms tabsize i/t\n"
                "where wavetype is one of:\n"
                "\t0 = triangle\n"
                "\t1 = square\n"
@@ -78,6 +81,8 @@ int main(int argc, char** argv) {
                "amp = amplitude value or breakpoint file (0 < amp <= 1.0)\n"
                "freq = frequency in Hz or breakpoint file > 0\n"
                "nharms = number of harmonics\n"
+               "tabsize = table size\n"
+               "i = interpolated or t = truncated\n"
                );
 
         return 1;
@@ -193,6 +198,28 @@ int main(int argc, char** argv) {
         goto exit;
     }
 
+    tabsize = atoi(argv[ARG_TABSIZE]);
+    if (tabsize < 1) {
+        printf("Error: number of table size must be at least 1.\n");
+        error++;
+        goto exit;
+    }
+
+    t = argv[ARG_I][0];
+    if (t == 't') {
+        tick = tabtick;
+    } 
+    else if (t == 'i') 
+    {
+        tick = tabitick;
+    } 
+    else
+    {
+        printf("Error: invalid lookup table type, choose i for interpolated and t for truncated types.\n");
+        error++;
+        goto exit;
+    } 
+
     /* start up portsf */
     if ( psf_init() ) {
         printf("Error: unable to start portsf.\n");
@@ -246,6 +273,9 @@ int main(int argc, char** argv) {
     case WAVE_SAWUP:
         gtable = new_saw(tabsize, nharms, 1);   
         break;
+    case WAVE_PULSE:
+        gtable = new_pulse(tabsize, nharms);
+        break;
     }
 
     p_osc = new_oscilt(srate, gtable, phase);
@@ -272,7 +302,7 @@ int main(int argc, char** argv) {
             if (freqStream)
                 freq = bps_tick(freqStream);
             
-            val = tabitick(p_osc, freq);
+            val = tick(p_osc, freq);
             for (long k = 0; k < chans; ++k) {
                 outframe[j * outprops.chans + k] = (float)(val  * amp);
             }

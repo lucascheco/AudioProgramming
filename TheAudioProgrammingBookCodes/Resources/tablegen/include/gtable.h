@@ -30,3 +30,6 @@ GTABLE* new_gtable(unsigned long length);
 GTABLE* new_triangle(unsigned long length, unsigned long nharms);
 GTABLE* new_square(unsigned long length, unsigned long nharms);
 GTABLE* new_saw(unsigned long length, unsigned long nharms, int up);
+GTABLE* new_pulse(unsigned long length,unsigned long nharms);
+
+typedef double (*gtickfunc)(OSCILT* p_osc, double freq);
