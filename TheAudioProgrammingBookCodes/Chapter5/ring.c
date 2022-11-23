@@ -1,6 +1,6 @@
 /***********************************************************************************
     Author:      Lucas Pacheco.
-    Description: Chapter 5, Mixing two signals.
+    Description: Chapter 5, ring modulation.
     Date:        22/11/2022
 ************************************************************************************/
 
@@ -18,7 +18,7 @@ int main(int argc, char**argv) {
 
     int count;
     int n;
-    short sig1[N], sig2[N], mix[N];
+    short sig1[N], sig2[N], ring[N];
 
     if (argc != 4) 
         usage_and_exit();
@@ -36,8 +36,8 @@ int main(int argc, char**argv) {
             count = sf_read_short(sfp1, sig1, N);
             sf_read_short(sfp2, sig2, N);
             for (n = 0; n < count; n++)
-                mix[n] = sig1[n] + sig2[n];
-            sf_write_short(sfpo, mix, count);
+                ring[n] = sig1[n] * sig2[n];
+            sf_write_short(sfpo, ring, count);
         } while (count);
 
         sf_close(sfpo);
@@ -47,10 +47,10 @@ int main(int argc, char**argv) {
 }
 
 void usage_and_exit() {
-    printf("usage: mix input1 input2 output\n"
+    printf("usage: ring input1 input2 output\n"
            "where input1 & input2  are soundfiles\n"
            "with the same format and output is the\n"
-           "mixed filename \n"
+           "ring-modulated filename \n"
 	 );
      exit(1);
 }

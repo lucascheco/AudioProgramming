@@ -1,7 +1,6 @@
-PROG = sine
-
+PROG = fmsynth
 all:
-	gcc -o $(PROG) $(PROG).c -lm -lsndfile
+	gcc -o ./bin/$(PROG) $(PROG).c -lm -lsndfile
 
 run:
 	./$(PROG)
