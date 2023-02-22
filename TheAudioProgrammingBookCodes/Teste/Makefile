@@ -2,13 +2,13 @@
 
 ################################
 #Just modify the exercise number
-EXERCIS = 259#
+EXERCIS = 361#
 ################################
 
 # Folders Flags
 PSF     = ../Resources/portsf
 BRK     = ../Resources/breakpoints
-INCLUDE = "../Resources/include"
+INCLUDE = ../Resources/portsf/include
 SRC3     = ../Resources/wave
 INCLUDE3 = ../Resources/wave/include
 
@@ -21,11 +21,11 @@ MTHFLAG = -lm
 
 all:
 	$(CC) $(OBJFLAG) $(PSF)/portsf.c $(HS_FLAG) $(INCLUDE)
-	$(CC) $(OBJFLAG) $(PSF)/ieee80.c 
+	$(CC) $(OBJFLAG) $(PSF)/ieee80.c $(HS_FLAG) $(INCLUDE)
 	$(CC) $(OBJFLAG) $(BRK)/breakpoints.c $(HS_FLAG) "$(BRK)/include"
 	$(CC) $(OBJFLAG) $(SRC3)/wave.c $(HS_FLAG) $(INCLUDE3)
 	$(CC) $(OBJFLAG) Exercises$(EXERCIS).c $(HS_FLAG) $(INCLUDE) $(HS_FLAG) "$(BRK)/include" $(HS_FLAG) $(INCLUDE3)
-	$(CC) $(EXEFLAG) ex Exercises$(EXERCIS).o ieee80.o portsf.o breakpoints.o wave.o $(MTHFLAG)
+	$(CC) $(EXEFLAG) ex Exercises$(EXERCIS).o ieee80.o portsf.o breakpoints.o wave.o $(MTHFLAG) 
 
 run:
 

@@ -1,7 +1,7 @@
 /***********************************************************************************
     Author:      Lucas Pacheco.
     Description: Chapter 5, Sine improved.
-    Date:        18/11/2022
+    Date:        22/11/2022
 ************************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
 }
 
 void print_sinfo(char* path_to_file, SF_INFO info, float amp, float freq, float p, int block_size, float duration) {
-    printf("Sound information:\n"
+    printf("\n\nSound information:\n"
            "\tpath: %s\n"
            "\tchannels: %d\n"
            "\tsamplerate: %d\n"
@@ -74,12 +74,12 @@ void print_sinfo(char* path_to_file, SF_INFO info, float amp, float freq, float 
            "\tfrequency: %f\n"
            "\tphase: %f\n"
            "\tblock size: %d\n"
-           "\tduration: %f\n", path_to_file, info.channels, info.samplerate, amp, freq, p, block_size, duration);
+           "\tduration: %f\n\n", path_to_file, info.channels, info.samplerate, amp, freq, p, block_size, duration);
 }
 
 void usage_message() {
-    printf("project1 [-n filename] [-s samplerate] [-a amp] [-f freq] [-p phase] [-t textfile.txt]"
-           "ex: project1 -n filename.wav -s 44100 -a 32767 -f 220.0 -p 0.0 -t sine.txt");
+    printf("\n\nproject1 [-n filename] [-s samplerate] [-a amp] [-f freq] [-p phase] [-t textfile.txt]\n"
+           "ex: project1 -n filename.wav -s 44100 -a 32767 -f 220.0 -p 0.0 -t sine.txt\n\n");
 }
 
 char first_char_of(char* a) {

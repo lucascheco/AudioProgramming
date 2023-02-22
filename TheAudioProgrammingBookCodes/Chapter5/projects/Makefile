@@ -1,4 +1,4 @@
-PROG = project1
+PROG = project2
 all:
 	gcc -o ../bin/$(PROG) $(PROG).c -lm -lsndfile
 
