@@ -1,6 +1,6 @@
-PROG = simplesynth
+PROG = env_simplesynth
 all:
-	g++ -o ./bin/$(PROG) $(PROG).cpp oscil.cpp soundio.cpp ftables.cpp -lm -lsndfile -I.
+	g++ -o ./bin/$(PROG) $(PROG).cpp oscil.cpp soundio.cpp ftables.cpp envel.cpp -lm -lsndfile -I.
 
 run:
 	./$(PROG)
