@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/Resources/waveform/include",
-                "${workspaceFolder}/Resources/portsf/include"
+                "${workspaceFolder}/Resources/portsf/include",
+                "${workspaceFolder}/Chapter6"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

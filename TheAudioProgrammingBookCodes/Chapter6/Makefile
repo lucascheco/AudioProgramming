@@ -1,4 +1,4 @@
-PROG = env_simplesynth
+PROG = subtractive_synth
 all:
 	g++ -o ./bin/$(PROG) $(PROG).cpp oscil.cpp soundio.cpp ftables.cpp envel.cpp -lm -lsndfile -I.
 
